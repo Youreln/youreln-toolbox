@@ -1,0 +1,18 @@
+body {
+  background-color: black;
+}
+
+canvas {
+  background-color: white;
+  border: 1px solid lightgray;
+  display: block;
+  margin: 0 auto;
+}
+
+button {
+  background-color: lightgreen;
+  color: black;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+}
