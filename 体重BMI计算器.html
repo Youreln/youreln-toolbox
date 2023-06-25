@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>BMI计算器</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			background-color: #f2f2f2;
+		}
+
+		.container {
+			width: 600px;
+			margin: 20px auto;
+			padding: 20px;
+			background-color: #fff;
+			border-radius: 5px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+		}
+
+		.input-group {
+			margin-bottom: 20px;
+		}
+
+		.input-label {
+			display: block;
+			margin-bottom: 5px;
+			font-size: 16px;
+			font-weight: bold;
+			color: #333;
+		}
+
+		.input-field {
+			display: block;
+			width: 100%;
+			padding: 10px;
+			font-size: 16px;
+			border: none;
+			border-radius: 5px;
+			box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+			background-color: #f9f9f9;
+			color: #333;
+		}
+
+		.btn {
+			display: inline-block;
+			padding: 10px 20px;
+			font-size: 16px;
+			border: none;
+			border-radius: 5px;
+			background-color: #4CAF50;
+			color: #fff;
+			text-align: center;
+			text-decoration: none;
+			cursor: pointer;
+		}
+
+		.btn:hover {
+			background-color: #3e8e41;
+		}
+
+		.result {
+			margin-top: 20px;
+			font-size: 24px;
+			font-weight: bold;
+			color: #333;
+		}
+
+		.result-label {
+			display: inline-block;
+			margin-right: 10px;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>BMI计算器</h1>
+
+		<div class="input-group">
+			<label for="height" class="input-label">身高(cm)：</label>
+			<input type="number" name="height" id="height" class="input-field" required>
+		</div>
+
+		<div class="input-group">
+			<label for="weight" class="input-label">体重(kg)：</label>
+			<input type="number" name="weight" id="weight" class="input-field" required>
+		</div>
+
+		<button type="button" class="btn" onclick="calculate()">开始计算</button>
+
+		<div class="result" id="result" style="display:none;">
+			<span class="result-label">您的BMI值为：</span>
+			<span id="bmi" class="result-value"></span>
+			<br>
+			<span class="result-label">您的身体状况属于：</span>
+			<span id="status" class="result-value"></span>
+			<br>
+			<p>注意：BMI计算器仅供参考，它不能准确地反映个体的身体健康情况，如果您有任何身体健康问题，请咨询医生或其他专业人士。</p>
+		</div>
+	</div>
+
+	<script>
+		function calculate() {
+			const height = document.getElementById('height').value;
+			const weight = document.getElementById('weight').value;
+
+			if (!height || !weight) {
+				alert('请填写身高和体重');
+				return;
+			}
+
+			const bmi = (weight / Math.pow(height / 100, 2)).toFixed(1);
+
+			document.getElementById('result').style.display = 'block';
+			document.getElementById('bmi').textContent = bmi;
+
+			if (bmi < 18.5) {
+				document.getElementById('status').textContent = '偏瘦';
+			} else if (bmi < 24) {
+				document.getElementById('status').textContent = '正常';
+			} else if (bmi < 28) {
+				document.getElementById('status').textContent = '超重';
+			} else {
+				document.getElementById('status').textContent = '肥胖';
+			}
+		}
+	</script>
+</body>
+</html>

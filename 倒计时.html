@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>倒计时工具</title>
+    <style>
+        #countdown {
+            font-size: 64px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>倒计时工具</h1>
+    <form>
+        <label for="minutes">倒计时时间（分钟）：</label>
+        <input type="number" id="minutes" name="minutes" placeholder="输入倒计时时间（分钟）" required>
+        <br>
+        <button type="button" onclick="startCountdown()">开始倒计时</button>
+    </form>
+    
+    <div id="countdown"></div>
+    <script>
+        function startCountdown() {
+            var minutes = parseInt(document.getElementById("minutes").value);
+            if (isNaN(minutes) || minutes <= 0) {
+                alert("请输入有效的倒计时时间（分钟）！");
+                return;
+            }
+            
+            var count = minutes * 60;
+            var countdownElem = document.getElementById("countdown");
+            var updateCountdown = setInterval(function() {
+                var minutesLeft = Math.floor(count / 60);
+                var secondsLeft = count % 60;
+                countdownElem.innerHTML = minutesLeft + " 分钟 " + secondsLeft + " 秒";
+                
+                count--;
+                if (count < 0) {
+                    clearInterval(updateCountdown);
+                    countdownElem.innerHTML = "时间到！";
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>亲戚关系计算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+        
+        .container {
+            width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .input-field {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: #3e8e41;
+        }
+        
+        .result {
+            margin-top: 20px;
+        }
+        
+        .result-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .result-field {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+            color: #333;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>亲戚关系计算器</h1>
+
+        <form id="relationship-form" method="POST">
+            <div class="input-group">
+                <label for="person1" class="input-label">第一个人：</label>
+                <select name="person1" id="person1" class="input-field" required>
+                    <option value="">请选择…</option>
+                    <option value="father">父亲</option>
+                    <option value="mother">母亲</option>
+                    <option value="son">儿子</option>
+                    <option value="daughter">女儿</option>
+                    <option value="grandfather">爷爷</option>
+                    <option value="grandmother">奶奶</option>
+                    <option value="grandson">孙子</option>
+                    <option value="granddaughter">孙女</option>
+                    <option value="brother">兄弟</option>
+                    <option value="sister">姐妹</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="person2" class="input-label">第二个人：</label>
+                <select name="person2" id="person2" class="input-field" required>
+                    <option value="">请选择…</option>
+                    <option value="father">父亲</option>
+                    <option value="mother">母亲</option>
+                    <option value="son">儿子</option>
+                    <option value="daughter">女儿</option>
+                    <option value="grandfather">爷爷</option>
+                    <option value="grandmother">奶奶</option>
+                    <option value="grandson">孙子</option>
+                    <option value="granddaughter">孙女</option>
+                    <option value="brother">兄弟</option>
+                    <option value="sister">姐妹</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn">计算关系</button>
+        </form>
+
+        <div class="result">
+            <label for="relationship" class="result-label">亲戚关系：</label>
+            <input type="text" name="relationship" id="relationship" class="result-field" readonly>
+        </div>
+    </div>
+
+    <script>
+        function calculateRelationship(event) {
+            event.preventDefault();
+
+            const person1 = document.getElementById('person1').value;
+            const person2 = document.getElementById('person2').value;
+
+            let relationship = '';
+
+            if (person1 === 'father' && person2 === 'son') {
+                relationship = '父子';
+            } else if (person1 === 'father' && person2 === 'daughter') {
+                relationship = '父女';
+            } else if (person1 === 'mother' && person2 === 'son') {
+                relationship = '母子';
+            } else if (person1 === 'mother' && person2 === 'daughter') {
+                relationship = '母女';
+            } else if (person1 === 'son' && person2 === 'father') {
+                relationship = '父子';
+            } else if (person1 === 'son' && person2 === 'mother') {
+                relationship = '母子';
+            } else if (person1 === 'daughter' && person2 === 'father') {
+                relationship = '父女';
+            } else if (person1 === 'daughter' && person2 === 'mother') {
+                relationship = '母女';
+            } else if (person1 === 'father' && person2 === 'father') {
+                relationship = '爷爷';
+            } else if (person1 === 'father' && person2 === 'mother') {
+                relationship = '奶奶';
+            } else if (person1 === 'mother' && person2 === 'father') {
+                relationship = '外公';
+            } else if (person1 === 'mother' && person2 === 'mother') {
+                relationship = '外婆';
+            } else if (person1 === 'son' && person2 === 'son') {
+                relationship = '兄弟';
+            } else if (person1 === 'son' && person2 === 'daughter') {
+                relationship = '姐弟';
+            } else if (person1 === 'daughter' && person2 === 'son') {
+                relationship = '兄妹';
+            } else if (person1 === 'daughter' && person2 === 'daughter') {
+                relationship = '姐妹';
+            } else if (person1 === 'father' && person2 === 'grandson') {
+                relationship = '爷爷';
+            } else if (person1 === 'father' && person2 === 'granddaughter') {
+                relationship = '奶奶';
+            } else if (person1 === 'mother' && person2 === 'grandson') {
+                relationship = '外公';
+            } else if (person1 === 'mother' && person2 === 'granddaughter') {
+                relationship = '外婆';
+            } else if (person1 === 'grandfather' && person2 === 'son') {
+                relationship = '孙子';
+            } else if (person1 === 'grandfather' && person2 === 'daughter') {
+                relationship = '孙女';
+            } else if (person1 === 'grandmother' && person2 === 'son') {
+                relationship = '孙子';
+            } else if (person1 === 'grandmother' && person2 === 'daughter') {
+                relationship = '孙女';
+            } else if (person1 === 'son' && person2 === 'grandfather') {
+                relationship = '孙子';
+            } else if (person1 === 'son' && person2 === 'grandmother') {
+                relationship = '孙女';
+            } else if (person1 === 'daughter' && person2 === 'grandfather') {
+                relationship = '孙子';
+            } else if (person1 === 'daughter' && person2 === 'grandmother') {
+                relationship = '孙女';
+            } else if (person1 === 'brother' && person2 === 'brother') {
+                relationship = '兄兄';
+            } else if (person1 === 'brother' && person2 === 'sister') {
+                relationship = '兄妹';
+            } else if (person1 === 'sister' && person2 === 'brother') {
+                relationship = '姐弟';
+            } else if (person1 === 'sister' && person2 === 'sister') {
+                relationship = '姐妹';
+            }
+
+            document.getElementById('relationship').value = relationship;
+        }
+
+        document.getElementById('relationship-form').addEventListener('submit', calculateRelationship);
+    </script>
+</body>
+</html>

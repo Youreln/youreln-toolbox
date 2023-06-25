@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>短煊函数图像绘制工具</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+        width: 90%;
+        max-width: 600px;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>短煊函数图像绘制工具</h2>
+    <p>请在下面的画布上自由绘制</p>
+    <form>
+      <label for="color">颜色：</label>
+      <input type="color" id="color" name="color" value="#0000ff" />
+      <br />
+      <label for="size">粗细：</label>
+      <input type="range" id="size" name="size" min="1" max="20" value="5" />
+      <br />
+      <label for="mode">模式：</label>
+      <select id="mode" name="mode">
+        <option value="curve">曲线</option>
+        <option value="line">直线</option>
+      </select>
+      <br />
+      <button id="clearButton" type="button">清空</button>
+      <button id="saveButton" type="button">保存</button>
+    </form>
+    <div style="text-align: center;">
+      <canvas id="myCanvas"></canvas>
+    </div>
+    <script>
+      var canvas = document.getElementById("myCanvas");
+      var ctx = canvas.getContext("2d");
+
+      // 设置画布大小和坐标轴
+      var canvasWidth, canvasHeight;
+      if (window.innerWidth > 600) {
+        canvasWidth = 600;
+      } else {
+        canvasWidth = window.innerWidth - 20;
+      }
+      canvasHeight = canvasWidth;
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
+      var axisX = canvasWidth / 2;
+      var axisY = canvasHeight / 2;
+
+      // 绘制坐标轴
+      ctx.beginPath();
+      ctx.moveTo(0, axisY);
+      ctx.lineTo(canvasWidth, axisY);
+      ctx.moveTo(axisX, 0);
+      ctx.lineTo(axisX, canvasHeight);
+      ctx.strokeStyle = "black";
+      ctx.stroke();
+
+      // 监听鼠标事件
+      var isDrawing = false;
+      var lastX = 0;
+      var lastY = 0;
+
+      function drawMouse(e) {
+        if (!isDrawing) return; // 没有按下鼠标，不绘制
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        if (document.getElementById("mode").value === "curve") {
+          ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+        } else {
+          ctx.lineTo(e.clientX - canvas.offsetLeft, lastY);
+        }
+        ctx.strokeStyle = document.getElementById("color").value;
+        ctx.lineWidth = document.getElementById("size").value;
+        ctx.lineCap = "round";
+        ctx.stroke();
+        [lastX, lastY] = [e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop];
+      }
+
+      canvas.addEventListener("mousedown", (e) => {
+        isDrawing = true;
+        [lastX, lastY] = [e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop];
+      });
+
+      canvas.addEventListener("mousemove", drawMouse);
+      canvas.addEventListener("mouseup", () => (isDrawing = false));
+      canvas.addEventListener("mouseleave", () => (isDrawing = false));
+
+      // 监听触摸事件
+      function drawTouch(e) {
+        e.preventDefault(); // 阻止默认行为，避免滚动屏幕
+        if (!isDrawing) return; // 没有按下触摸，不绘制
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        if (document.getElementById("mode").value === "curve") {
+          ctx.lineTo(
+            e.touches[0].clientX - canvas.offsetLeft,
+            e.touches[0].clientY - canvas.offsetTop
+          );
+        } else {
+          ctx.lineTo(e.touches[0].clientX - canvas.offsetLeft, lastY);
+        }
+        ctx.strokeStyle = document.getElementById("color").value;
+        ctx.lineWidth = document.getElementById("size").value;
+        ctx.lineCap = "round";
+        ctx.stroke();
+        [lastX, lastY] = [
+          e.touches[0].clientX - canvas.offsetLeft,
+          e.touches[0].clientY - canvas.offsetTop,
+        ];
+      }
+
+      canvas.addEventListener("touchstart", (e) => {
+        isDrawing = true;
+        [lastX, lastY] = [
+          e.touches[0].clientX - canvas.offsetLeft,
+          e.touches[0].clientY - canvas.offsetTop,
+        ];
+      });
+
+      canvas.addEventListener("touchmove", drawTouch);
+      canvas.addEventListener("touchend", () => (isDrawing = false));
+      canvas.addEventListener("touchcancel", () => (isDrawing = false));
+
+      // 清空画布
+      var clearButton = document.getElementById("clearButton");
+      clearButton.addEventListener("click", function () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // 重新绘制坐标轴
+        ctx.beginPath();
+        ctx.moveTo(0, axisY);
+        ctx.lineTo(canvasWidth, axisY);
+        ctx.moveTo(axisX, 0);
+        ctx.lineTo(axisX, canvasHeight);
+        ctx.strokeStyle = "black";
+        ctx.stroke();
+      });
+
+      // 保存图像
+      var saveButton = document.getElementById("saveButton");
+      saveButton.addEventListener("click", function () {
+        var image = canvas.toDataURL("image/png");
+        if (typeof window.Android === "undefined") {
+          var link = document.createElement("a");
+          link.download = "drawing.png";
+          link.href = image;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } else {
+          try {
+            var filename = "drawing.png";
+            var mimeType = "image/png";
+            window.Android.saveImage(image, filename, mimeType);
+            alert("保存完成");
+          } catch (e) {
+            alert("保存失败：" + e);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

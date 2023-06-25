@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>分享框</title>
+  <style>
+    .share-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .share-box input[type="text"] {
+      padding: 5px;
+      margin-right: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    .share-box button {
+      padding: 5px 10px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+  <script>
+    function shareToFriend() {
+      var shareInput = document.getElementById("share-input");
+      var content = shareInput.value;
+
+      var selectedOption = prompt("请选择分享方式：\n1. 微信\n2. QQ\n3. 复制文本\n4. 电子邮件");
+
+      if (selectedOption === "1") {
+        shareOnWeChat(content);
+      } else if (selectedOption === "2") {
+        shareOnQQ(content);
+      } else if (selectedOption === "3") {
+        copyText(content);
+      } else if (selectedOption === "4") {
+        shareViaEmail(content);
+      } else {
+        alert("无效的选项！请输入数字");
+      }
+    }
+
+    function shareOnWeChat(content) {
+      alert("跳转失败，请手动打开微信进行分享");
+    }
+
+    function shareOnQQ(content) {
+      alert("跳转失败请手动打开QQ进行分享");
+    }
+
+    function copyText(content) {
+      var tempInput = document.createElement("input");
+      tempInput.value = content;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
+      alert("已复制到剪贴板");
+    }
+
+    function shareViaEmail(content) {
+      var emailLink = "mailto:?subject=分享&body=" + encodeURIComponent(content);
+      window.location.href = emailLink;
+    }
+  </script>
+</head>
+<body>
+  <div class="share-box">
+    <input type="text" id="share-input" placeholder="输入分享内容">
+    <button onclick="shareToFriend()">分享</button>
+  </div>
+</body>
+</html>

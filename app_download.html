@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>下载页</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            margin-top: 200px;
+        }
+        
+        h1 {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+    </style>
+    <script>
+        // 判断是否在微信浏览器中
+        function isWeChat() {
+            var ua = navigator.userAgent.toLowerCase();
+            return ua.indexOf('micromessenger') !== -1;
+        }
+        
+        // 处理下载按钮点击事件
+        function handleDownload() {
+            if (isWeChat()) {
+                alert('请使用浏览器打开下载链接');
+            } else {
+                window.location.href = 'https://gitee.com/Youreln/Youreln/raw/master/Youreln%E5%B7%A5%E5%85%B7%E7%AE%B1_1.0.2_release.apk';
+            }
+        }
+    </script>
+</head>
+
+    <div class="container">
+        <h1>请使用手机app，暂时仅支持安卓版，苹果版即将上线</h1>
+        <p>点击下方按钮下载安装包</p>
+        <button class="btn" onclick="handleDownload();">下载</button>
+    </div>
+</body>
+</html>
