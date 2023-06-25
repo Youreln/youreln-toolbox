@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>点击方块</title>
+  <style>
+    body {
+      text-align: center;
+    }
+    #game-area {
+      width: 400px;
+      height: 400px;
+      margin: 0 auto;
+      position: relative;
+      background-color: #eee;
+    }
+    .square {
+      width: 50px;
+      height: 50px;
+      background-color: blue;
+      position: absolute;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>点击方块</h1>
+  <p>在20秒内尽可能多地点击蓝色方块</p>
+  <div id="game-area">
+    <!-- 方块会通过JavaScript动态生成 -->
+  </div>
+  <div id="countdown"></div>
+  <button id="share-btn" style="display: none;">分享游戏结果</button>
+
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script>
+    // 游戏区域
+    const gameArea = document.getElementById('game-area');
+
+    // 定义变量
+    let score = 0;
+    let timeLeft = 20;
+
+    // 页面加载完毕后执行初始化操作
+    document.addEventListener("DOMContentLoaded", function() {
+      init();
+    });
+
+    // 初始化函数
+    function init() {
+      // 创建方块
+      createSquares();
+
+      // 开始倒计时
+      countDown(timeLeft);
+
+      // 监听所有方块的点击事件
+      gameArea.addEventListener('click', handleClick);
+    }
+
+    // 创建方块
+    function createSquares() {
+      for (let i = 0; i < 20; i++) {
+        let div = document.createElement('div');
+        div.className = 'square';
+        div.style.left = Math.floor(Math.random() * 350) + 'px';
+        div.style.top = Math.floor(Math.random() * 350) + 'px';
+        gameArea.appendChild(div);
+      }
+    }
+
+    // 处理方块的点击事件
+    function handleClick(e) {
+      if (e.target.classList.contains('square')) {
+        score++;
+        e.target.style.display = 'none';
+      }
+    }
+
+    // 倒计时函数
+    function countDown(timeLeft) {
+      let countdown = document.getElementById("countdown");
+      let timer = setInterval(function() {
+        countdown.innerHTML = "倒计时：" + timeLeft;
+        timeLeft--;
+        if (timeLeft === -1) {
+          clearInterval(timer);
+          countdown.innerHTML = "时间到！您的得分是：" + score;
+          let shareBtn = document.getElementById("share-btn");
+          shareBtn.style.display = 'block'; // 显示分享按钮
+          // 游戏结束后生成分享图片
+          html2canvas(gameArea).then(function(canvas) {
+            let imgSrc = canvas.toDataURL();
+            let link = document.createElement("a");
+            link.download = "点击方块得分-" + score + ".png";
+            link.href = imgSrc;
+            link.click();
+          });
+        }
+      }, 1000);
+    }
+
+    // 分享按钮点击事件
+    const shareBtn = document.getElementById("share-btn");
+    shareBtn.addEventListener('click', function() {
+      // 在这里添加分享内容和逻辑
+      alert('您成功分享了游戏结果！');
+    });
+  </script>
+</body>
+</html>

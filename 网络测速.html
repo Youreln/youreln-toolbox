@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>网络测速工具</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f8e9;
+    }
+
+    header {
+      text-align: center;
+      padding: 20px 0;
+      background-color: #81c784;
+    }
+
+    h1 {
+      color: #fff;
+      font-size: 40px;
+      font-weight: bold;
+    }
+
+    main {
+      margin: 40px auto;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .speedometer {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 50%;
+      padding: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .speedometer:before,
+    .speedometer:after {
+      content: "";
+      position: absolute;
+      top: 120px;
+      width: 20px;
+      height: 60px;
+      background-color: #81c784;
+      border-radius: 10px;
+    }
+
+    .speedometer:before {
+      left: 20px;
+      transform: rotate(-30deg);
+      transform-origin: 50% 100%;
+    }
+
+    .speedometer:after {
+      right: 20px;
+      transform: rotate(30deg);
+      transform-origin: 50% 100%;
+    }
+
+    .needle {
+      position: absolute;
+      top: 120px;
+      left: 140px;
+      width: 20px;
+      height: 200px;
+      background-color: #e57373;
+      border-radius: 5px;
+      transform-origin: 50% 100%;
+      transition: transform 1s ease;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 28px;
+      color: #81c784;
+      font-weight: bold;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 10px 20px;
+      font-size: 24px;
+      background-color: #81c784;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .button:hover {
+      background-color: #689f38;
+    }
+
+    .setting {
+      margin-top: 20px;
+      font-size: 16px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>网络测速工具</h1>
+  </header>
+
+  <main>
+    <div class="speedometer">
+      <div class="needle"></div>
+    </div>
+    <div class="result">点击“开始测速”</div>
+    <button class="button" onclick="startSpeedTest()">开始测速</button>
+    <div class="setting">
+      单位：<select id="unit">
+              <option value="Mbps">Mbps</option>
+              <option value="Kbps">Kbps</option>
+            </select>
+      时间间隔：<input type="number" id="interval" value="1" min="1"/> 秒
+    </div>
+  </main>
+
+  <script>
+    var unitSelect = document.getElementById('unit');
+    var intervalInput = document.getElementById('interval');
+    var intervalId;
+
+    function startSpeedTest() {
+      clearInterval(intervalId);
+      intervalId = setInterval(getSpeed, intervalInput.value * 1000);
+    }
+
+    function getSpeed() {
+      // 模拟测速过程，此处省略具体实现
+      var result = Math.floor(Math.random() * 1000);
+      updateResult(result);
+    }
+
+    function updateResult(result) {
+      var needle = document.querySelector('.needle');
+      needle.style.transform = 'rotate(' + (result / 10 - 150) + 'deg)';
+      var resultText = document.querySelector('.result');
+      resultText.textContent = '测速结果：' + result + ' ' + unitSelect.value;
+    }
+  </script>
+</body>
+</html>

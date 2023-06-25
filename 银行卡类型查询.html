@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>银行卡类型查询工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e6f7ff;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 50px;
+            color: #1890ff;
+            font-size: 48px;
+            margin-bottom: 50px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            font-size: 24px;
+            color: #1890ff;
+            margin-bottom: 20px;
+        }
+
+        input[type=text] {
+            padding: 10px;
+            font-size: 24px;
+            border-radius: 5px;
+            border: none;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 24px;
+            color: #fff;
+            background-color: #1890ff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #096dd9;
+        }
+
+        .result {
+            margin-top: 50px;
+            font-size: 36px;
+            color: #1890ff;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>银行卡类型查询工具</h1>
+    <form>
+        <label for="cardNumber">请输入银行卡号：</label>
+        <input type="text" id="cardNumber" placeholder="请输入银行卡号">
+        <button type="button" onclick="checkCardType()">查询</button>
+    </form>
+    <div class="result" id="result"></div>
+
+    <script>
+        function checkCardType() {
+            var cardNumber = document.getElementById("cardNumber").value.trim();
+
+            if (cardNumber.length == 0) {
+                alert("请输入银行卡号！");
+                return;
+            }
+
+            var reg = /^([1-9]{1})(\d{14}|\d{15}|\d{18})$/;
+            if (!reg.test(cardNumber)) {
+                alert("银行卡号格式不正确！");
+                return;
+            }
+
+            var prefix = cardNumber.substring(0,6); // 截取卡号前六位
+            var url = "https://ccdcapi.alipay.com/validateAndCacheCardInfo.json?_input_charset=utf-8&cardNo=" + cardNumber + "&cardBinCheck=true";
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url);
+            xhr.onload = function () {
+                if (xhr.status === 200) { // 请求成功处理
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.validated && response.cardType != "DC") { // 验证通过且不是借记卡
+                        document.getElementById("result").textContent = "该银行卡为" + response.bank + response.cardType + "卡";
+                        return;
+                    }
+                }
+                document.getElementById("result").textContent = "该银行卡类型无法查询或为借记卡";
+            };
+            xhr.onerror = function () {
+                document.getElementById("result").textContent = "查询失败，请重试！";
+            };
+            xhr.send();
+        }
+    </script>
+</body>
+
+</html>

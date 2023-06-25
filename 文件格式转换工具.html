@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HTML转PDF工具</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+<body>
+  <h1>HTML转PDF工具</h1>
+
+  <form id="form">
+    <label for="url">输入网址：</label>
+    <input type="text" id="url" name="url" placeholder="https://example.com" required>
+    <button onclick="exportPdfFromUrl()">导出PDF</button>
+  </form>
+
+  <h2>或者</h2>
+
+  <form id="uploadForm">
+    <label for="htmlFile">上传HTML文件：</label>
+    <input type="file" id="htmlFile" name="htmlFile" accept=".html">
+    <button onclick="exportPdfFromFile()">导出PDF</button>
+  </form>
+
+  <script>
+    function exportPdfFromUrl() {
+      const url = document.getElementById("url").value;
+
+      if (url.trim() === "") {
+        alert("请输入有效的网址！");
+        return;
+      }
+
+      const proxyUrl = "https://cors-anywhere.herokuapp.com/"; // 使用代理解决跨域问题
+      const apiUrl = proxyUrl + url;
+
+      fetch(apiUrl)
+        .then(response => response.text())
+        .then(html => {
+          exportPdf(html);
+        })
+        .catch(error => {
+          alert("无法获取网页内容：" + error);
+        });
+    }
+
+    function exportPdfFromFile() {
+      const fileInput = document.getElementById("htmlFile");
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert("请选择一个HTML文件！");
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = function(event) {
+        const html = event.target.result;
+        exportPdf(html);
+      };
+
+      reader.readAsText(file);
+    }
+
+    function exportPdf(html) {
+      const div = document.createElement("div");
+      div.innerHTML = html;
+
+      html2canvas(div).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF();
+
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save("output.pdf");
+      });
+    }
+  </script>
+</body>
+</html>

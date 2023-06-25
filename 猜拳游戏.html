@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>石头、剪子、布游戏</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #bdc3c7, #2c3e50);
+            font-family: Arial, sans-serif;
+            color: #fff;
+            text-align: center;
+        }
+        
+        h1 {
+            margin-top: 50px;
+            font-size: 36px;
+            font-weight: bold;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 30px;
+            border: none;
+            margin-bottom: 20px;
+            background: linear-gradient(to bottom right, #3498db, #2980b9);
+            color: white;
+            cursor: pointer;
+            box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            background: linear-gradient(to bottom right, #fa8072, #ff6347);
+        }
+        
+        #result {
+            font-size: 24px;
+            margin-top: 30px;
+            font-weight: bold;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            margin: 20px auto;
+            width: 60%;
+            max-width: 500px;
+        }
+
+        .return-button {
+            display: block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: none;
+            background: linear-gradient(to bottom right, #d35400, #e67e22);
+            color: white;
+            cursor: pointer;
+            box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .return-button:hover {
+            transform: scale(1.1);
+            background: linear-gradient(to bottom right, #27ae60, #2ecc71);
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>石头、剪子、布</h1>
+        <p>请选择你的出招：</p>
+        <button onclick="play('石头')">✊ 石头</button>
+        <button onclick="play('剪刀')">✌️ 剪子</button>
+        <button onclick="play('布')">🖐️ 布</button>
+        <p id="result"></p>
+    </div>
+    <script>
+        function play(userChoice) {
+            var choices = ['石头', '剪刀', '布'];
+            var computerChoice = choices[Math.floor(Math.random()*3)];
+                
+            var resultElem = document.getElementById("result");
+            if (userChoice === computerChoice) {
+                resultElem.innerHTML = "平局！你出的是 " + userChoice + "，贵只因出的也是 " + computerChoice + "。";
+            } else if ((userChoice === '石头' && computerChoice === '剪刀') || 
+                       (userChoice === '布' && computerChoice === '石头') ||
+                       (userChoice === '剪刀' && computerChoice === '布')) {
+                resultElem.innerHTML = "你赢了！你出的是 " + userChoice + "，贵只因出的是 " + computerChoice + "。";
+            } else {
+                resultElem.innerHTML = "你输了！你出的是 " + userChoice + "，贵只因出的是 " + computerChoice + "。";
+            }
+        }
+    </script>
+    <button class="return-button" onclick="window.location.href='https://youreln.gitee.io/xiaopflovexiaoxu/%E5%88%BA%E6%BF%80%E7%89%88.html'">刺激版</button>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>山鸡跳跳乐</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f8e9;
+    }
+
+    header {
+      text-align: center;
+      padding: 20px 0;
+      background-color: #81c784;
+    }
+
+    h1 {
+      color: #fff;
+      font-size: 40px;
+      font-weight: bold;
+    }
+
+    main {
+      margin: 40px auto;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .game-area {
+      position: relative;
+      width: 400px;
+      height: 400px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    .chicken {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 40px;
+      line-height: 1;
+      cursor: pointer;
+      transition: bottom 0.3s;
+    }
+
+    .score {
+      margin-top: 20px;
+      font-size: 24px;
+      color: #81c784;
+      font-weight: bold;
+    }
+
+    .restart-button {
+      display: none;
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 20px;
+      background-color: #81c784;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .rule {
+      margin-top: 20px;
+      font-size: 16px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>山鸡跳跳乐</h1>
+  </header>
+
+  <main>
+    <div class="game-area">
+      <div class="chicken">🐔</div>
+    </div>
+    <div class="score">得分：0</div>
+    <button class="restart-button">重新开始</button>
+    <div class="rule">点击山鸡🐔，加一分！</div>
+  </main>
+
+  <script>
+    var chicken = document.querySelector('.chicken');
+    var scoreText = document.querySelector('.score');
+    var restartButton = document.querySelector('.restart-button');
+    var score = 0;
+
+    var isJumping = false;
+
+    chicken.addEventListener('click', function() {
+      if (!isJumping) {
+        score++;
+        scoreText.textContent = '得分：' + score;
+        jump();
+      }
+    });
+
+    restartButton.addEventListener('click', function() {
+      resetGame();
+    });
+
+    function jump() {
+      isJumping = true;
+      chicken.style.bottom = '200px';
+      setTimeout(function() {
+        chicken.style.bottom = '0';
+        isJumping = false;
+        checkGameOver();
+      }, 500);
+    }
+
+    function checkGameOver() {
+      var gameArea = document.querySelector('.game-area');
+      var chickenPosition = chicken.getBoundingClientRect();
+      var gameAreaPosition = gameArea.getBoundingClientRect();
+
+      if (chickenPosition.bottom >= gameAreaPosition.bottom) {
+        gameOver();
+      }
+    }
+
+    function gameOver() {
+      chicken.style.pointerEvents = 'none';
+      restartButton.style.display = 'inline-block';
+    }
+
+    function resetGame() {
+      chicken.style.pointerEvents = 'auto';
+      restartButton.style.display = 'none';
+      score = 0;
+      scoreText.textContent = '得分：' + score;
+    }
+
+    // 生成分享图片
+    window.addEventListener('load', function() {
+      html2canvas(document.body).then(function(canvas) {
+        var shareImage = document.createElement('img');
+        shareImage.src = canvas.toDataURL();
+        shareImage.style.width = '100%';
+        document.body.appendChild(shareImage);
+      });
+    });
+  </script>
+
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</body>
+</html>

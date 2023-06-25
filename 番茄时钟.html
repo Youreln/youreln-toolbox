@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>番茄时钟</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            background-color: #FDF5E6;
+            font-family: Arial, sans-serif;
+            color: #A0522D;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 50px;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        #timer {
+            margin-top: 30px;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 20px;
+            background-color: #A0522D;
+            color: white;
+            cursor: pointer;
+        }
+
+        input[type=number] {
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 10px;
+            border: none;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>番茄时钟</h1>
+    <div>
+        工作时间（分钟）：<input type="number" id="workTime" min="1" value="25">
+        休息时间（分钟）：<input type="number" id="breakTime" min="1" value="5">
+    </div>
+    <button onclick="startWork()">开始工作</button>
+    <div id="timer">25:00</div>
+
+    <script>
+        let workTotalTime = 1500; // 默认为 25 分钟
+        let breakTotalTime = 300; // 默认为 5 分钟
+        let timer; // 定时器
+        let isWorking = false; // 是否工作状态标识
+
+        const startWork = () => {
+            const workTime = document.getElementById('workTime').value;
+            const breakTime = document.getElementById('breakTime').value;
+            if (workTime > 0) {
+                workTotalTime = workTime * 60;
+            }
+            if (breakTime > 0) {
+                breakTotalTime = breakTime * 60;
+            }
+            document.querySelector('body').requestFullscreen();
+            displayTime(workTotalTime);
+            isWorking = true;
+            timer = setInterval(() => {
+                if (isWorking) {
+                    workTotalTime--;
+                    if (workTotalTime <= 0) {
+                        clearInterval(timer);
+                        startBreak();
+                    } else {
+                        displayTime(workTotalTime);
+                    }
+                } else {
+                    breakTotalTime--;
+                    if (breakTotalTime <= 0) {
+                        clearInterval(timer);
+                        document.querySelector('body').exitFullscreen();
+                        alert('休息时间结束！');
+                    } else {
+                        displayTime(breakTotalTime);
+                    }
+                }
+            }, 1000);
+        }
+
+        const startBreak = () => {
+            displayTime(breakTotalTime);
+            isWorking = false;
+            timer = setInterval(() => {
+                if (breakTotalTime <= 0) {
+                    clearInterval(timer);
+                    startWork();
+                } else {
+                    breakTotalTime--;
+                    displayTime(breakTotalTime);
+                }
+            }, 1000);
+        }
+
+        const displayTime = (time) => {
+            const minutes = Math.floor(time / 60).toString().padStart(2, '0');
+            const seconds = (time % 60).toString().padStart(2, '0');
+            document.getElementById('timer').innerHTML = `${minutes}:${seconds}`;
+        }
+    </script>
+</body>
+
+</html>

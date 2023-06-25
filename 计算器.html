@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Youreln做的计算器</title>
+	<style>
+		body {
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			background-color: #f0f0f0;
+		}
+		h1, h2 {
+			text-align: center;
+		}
+		#calculator {
+			margin: 20px auto;
+			width: 300px;
+			border: 1px solid #ccc;
+			padding: 10px;
+			background-color: #fff;
+			box-shadow: 0px 1px 5px 0px #00000026;
+		}
+		input[type="text"] {
+			display: block;
+			margin: 10px auto;
+			padding: 5px;
+			width: 80%;
+			border: 1px solid #ccc;
+			border-radius: 3px;
+			font-size: 16px;
+			text-align: right;
+		}
+		input[type="button"] {
+			display: inline-block;
+			margin: 5px;
+			padding: 10px;
+			width: 50px;
+			background-color: #e6e6e6;
+			border: none;
+			border-radius: 3px;
+			font-size: 16px;
+			cursor: pointer;
+		}
+		input[type="button"]:hover {
+			background-color: #d2d2d2;
+		}
+		#clear {
+			background-color: #ffcccc;
+		}
+		#equals {
+			background-color: #b3ffb3;
+		}
+	</style>
+</head>
+<body>
+	<h1>Youreln牛逼的计算器</h1>
+	<div id="calculator">
+		<input type="text" id="output" readonly>
+		<input type="button" value="1" onclick="appendToOutput('1')">
+		<input type="button" value="2" onclick="appendToOutput('2')">
+		<input type="button" value="3" onclick="appendToOutput('3')">
+		<input type="button" value="/" onclick="appendToOutput('/')">
+		<br>
+		<input type="button" value="4" onclick="appendToOutput('4')">
+		<input type="button" value="5" onclick="appendToOutput('5')">
+		<input type="button" value="6" onclick="appendToOutput('6')">
+		<input type="button" value="*" onclick="appendToOutput('*')">
+		<br>
+		<input type="button" value="7" onclick="appendToOutput('7')">
+		<input type="button" value="8" onclick="appendToOutput('8')">
+		<input type="button" value="9" onclick="appendToOutput('9')">
+		<input type="button" value="-" onclick="appendToOutput('-')">
+		<br>
+		<input type="button" value="0" onclick="appendToOutput('0')">
+		<input type="button" value="." onclick="appendToOutput('.')">
+		<input type="button" value="C" id="clear" onclick="clearOutput()">
+		<input type="button" value="+" onclick="appendToOutput('+')">
+		<br>
+		<input type="button" value="=" id="equals" onclick="calculate()">
+	</div>
+	<script>
+		let outputEl = document.getElementById('output');
+
+		function appendToOutput(str) {
+			outputEl.value += str;
+		}
+
+		function clearOutput() {
+			outputEl.value = '';
+		}
+
+		function calculate() {
+			let expression = outputEl.value;
+			if (expression) {
+				try {
+					let result = eval(expression);
+					outputEl.value = result;
+				} catch (err) {
+					alert('表达式错误！');
+				}
+			}
+		}
+	</script>
+</body>
+</html>
+<button onclick="window.location.href='https://youreln{$rthSuffix}/'">返回</button>

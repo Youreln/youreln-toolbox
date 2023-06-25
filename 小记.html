@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>小记本</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .note-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .note-input {
+            flex-grow: 1;
+            margin-right: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .note-buttons {
+            display: flex;
+        }
+
+        .note-buttons button {
+            margin-left: 5px;
+            padding: 5px 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .note-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .note-list li {
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .note-list li button {
+            margin-left: 5px;
+        }
+
+        .download-link {
+            margin-top: 10px;
+            display: block;
+            text-align: center;
+        }
+    </style>
+    <script>
+        // 将小记存储到本地存储
+        function saveNote() {
+            var noteInput = document.getElementById("note-input");
+            var note = noteInput.value.trim();
+
+            if (note) {
+                var notes = localStorage.getItem("notes");
+
+                if (notes) {
+                    notes = JSON.parse(notes);
+                } else {
+                    notes = [];
+                }
+
+                notes.push(note);
+                localStorage.setItem("notes", JSON.stringify(notes));
+
+                // 清空输入框
+                noteInput.value = "";
+
+                // 更新小记列表
+                loadNotes();
+            }
+        }
+
+        // 从本地存储加载小记列表
+        function loadNotes() {
+            var notes = localStorage.getItem("notes");
+            var noteList = document.getElementById("note-list");
+
+            if (notes) {
+                notes = JSON.parse(notes);
+
+                // 清空小记列表
+                noteList.innerHTML = "";
+
+                // 逐个添加小记
+                for (var i = 0; i < notes.length; i++) {
+                    var noteItem = document.createElement("li");
+                    noteItem.textContent = notes[i];
+
+                    var deleteButton = document.createElement("button");
+                    deleteButton.textContent = "删除";
+                    deleteButton.onclick = (function(index) {
+                        return function() {
+                            deleteNote(index);
+                        }
+                    })(i);
+
+                    var shareButton = document.createElement("button");
+                    shareButton.textContent = "分享";
+                    shareButton.onclick = (function(note) {
+                        return function() {
+                            shareNote(note);
+                        }
+                    })(notes[i]);
+
+                    noteItem.appendChild(deleteButton);
+                    noteItem.appendChild(shareButton);
+                    noteList.appendChild(noteItem);
+                }
+            }
+        }
+
+        // 删除小记
+        function deleteNote(index) {
+            var notes = localStorage.getItem("notes");
+
+            if (notes) {
+                notes = JSON.parse(notes);
+                notes.splice(index, 1);
+                localStorage.setItem("notes", JSON.stringify(notes));
+
+                // 更新小记列表
+                loadNotes();
+            }
+        }
+
+        // 分享小记
+        function shareNote(note) {
+            var shareMethod = prompt("请选择分享方式（例如：电子邮件、社交媒体等）最好截图分享:");
+
+            // 根据分享方式执行相应的分享操作
+            if (shareMethod) {
+                // TODO: 执行分享操作，将小记内容发送给对应的分享渠道
+                console.log("分享方式：" + shareMethod);
+                console.log("要分享的小记：" + note);
+            }
+        }
+
+        // 将小记保存为txt文件并下载
+        function downloadNotes() {
+            var notes = localStorage.getItem("notes");
+            if (notes) {
+                notes = JSON.parse(notes);
+
+                var content = "";
+                for (var i = 0; i < notes.length; i++) {
+                    content += notes[i] + "\n";
+                }
+
+                var blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+                saveAs(blob, "notes.txt");
+            }
+        }
+
+        // 页面加载完成后自动加载小记列表
+        window.onload = function() {
+            loadNotes();
+        };
+    </script>
+</head>
+<body>
+    <h1>小记本</h1>
+
+    <div class="note-container">
+        <input type="text" id="note-input" class="note-input" placeholder="输入您的小记">
+        <div class="note-buttons">
+            <button onclick="saveNote()">保存</button>
+        </div>
+    </div>
+
+    <ul id="note-list" class="note-list"></ul>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>屏幕测试</title>
+</head>
+<body>
+  <h1>屏幕测试</h1>
+
+  <div id="screen"></div>
+
+  <script>
+    const screen = document.getElementById("screen");
+    let step = 0;
+
+    function goBack() {
+      if (step > 0) {
+        step--;
+        updateScreen();
+      }
+    }
+
+    function exitTest() {
+      step = -1;
+      updateScreen();
+    }
+
+    function updateScreen() {
+      const colors = ["red", "green", "blue", "yellow", "cyan", "magenta"];
+      const color = colors[step % colors.length];
+
+      if (step === -1) {
+        screen.style.backgroundColor = "white";
+        screen.innerHTML = "<h2>测试结束</h2>";
+      } else {
+        screen.style.backgroundColor = color;
+        screen.innerHTML = "<h2>步骤 " + (step + 1) + "</h2>"
+      }
+    }
+
+    document.addEventListener("keydown", function(event) {
+      // 监听 ESC 键，退出测试
+      if (event.key === "Escape") {
+        exitTest();
+      }
+    });
+
+    screen.addEventListener("mousedown", function(event) {
+      // 监听鼠标右键，返回上一步测试
+      if (event.button === 2) {
+        goBack();
+      }
+    });
+
+    screen.addEventListener("touchstart", function(event) {
+      let touchStartTime = new Date().getTime();
+
+      screen.addEventListener("touchend", function(event) {
+        let touchEndTime = new Date().getTime();
+        let touchDuration = touchEndTime - touchStartTime;
+
+        // 长按触摸屏，返回上一步测试
+        if (touchDuration >= 1000) {
+          goBack();
+        }
+      }, { once: true });
+
+      screen.addEventListener("touchstart", function(event) {
+        // 双击触摸屏，退出测试
+        let doubleClickEndTime = new Date().getTime();
+
+        if (doubleClickEndTime - touchStartTime <= 300) {
+          exitTest();
+        }
+      }, { once: true });
+    });
+  </script>
+</body>
+</html>

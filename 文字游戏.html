@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字冒险游戏</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        p {
+            color: #666;
+            margin-top: 20px;
+        }
+
+        .option-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .option-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>文字冒险游戏</h1>
+    <p>你走进了一座黑暗的洞穴，前方分出三条道路。你会选择哪个道路探索？</p>
+    <button class="option-btn" onclick="choosePath('left')">左边的道路</button>
+    <button class="option-btn" onclick="choosePath('middle')">中间的道路</button>
+    <button class="option-btn" onclick="choosePath('right')">右边的道路</button>
+
+    <script>
+        var storyText = document.querySelector("p");
+
+        function choosePath(path) {
+            var randomNum = Math.random();
+            if (path === 'left') {
+                if (randomNum < 0.3) {
+                    storyText.textContent = "你走进了一个废弃的宝藏库，获得了一大袋金币！";
+                } else if (randomNum < 0.6) {
+                    storyText.textContent = "你遭遇了一群恶龙，勇敢地与它们战斗，并成功击退了它们！";
+                } else {
+                    storyText.textContent = "你迷失在了洞穴中，找不到回去的路。";
+                }
+            } else if (path === 'middle') {
+                if (randomNum < 0.5) {
+                    storyText.textContent = "你掉入了陷阱，但幸运地逃脱了！";
+                } else {
+                    storyText.textContent = "你发现了一位友善的精灵，它帮助你找到了回家的路。";
+                }
+            } else if (path === 'right') {
+                if (randomNum < 0.7) {
+                    storyText.textContent = "你遇到了一只可爱的小狗，它成为了你的好朋友！";
+                } else {
+                    storyText.textContent = "你探索了一段时间后，突然不小心摔倒了，但没有受伤。";
+                }
+            }
+            updateOptions();
+        }
+
+        function updateOptions() {
+            var options = document.getElementsByClassName("option-btn");
+            for (var i = 0; i < options.length; i++) {
+                options[i].disabled = true;
+            }
+            setTimeout(function() {
+                for (var i = 0; i < options.length; i++) {
+                    options[i].disabled = false;
+                }
+                storyText.textContent = "你继续向前走，在面前出现了新的道路选择。";
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

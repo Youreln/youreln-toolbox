@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>最无聊的扫雷游戏——Youreln搞的</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        #minesweeper {
+            margin: 20px auto;
+            width: 400px;
+            height: 400px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0px 1px 5px 0px #00000026;
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            grid-template-rows: repeat(10, 1fr);
+        }
+        .cell {
+            background-color: #d9d9d9;
+            border: 1px solid #ccc;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .cell:hover {
+            background-color: #c3c3c3;
+        }
+        .mine {
+            font-size: 30px;
+        }
+        .flag {
+            font-size: 30px;
+            color: red;
+        }
+    </style>最无聊的扫雷游戏——Youreln搞的
+    <h1>扫雷游戏</h1>
+    <div id="minesweeper"></div>
+    <div style="text-align: center;">
+        <button id="restart">再来一局</button>
+        <p>最佳成绩：<span id="bestscore">0</span></p>
+        <p>当前成绩：<span id="currentscore">0</span></p>
+    </div>
+    <script>
+        const ROWS = 10;
+        const COLS = 10;
+        const MINES = 10;
+
+        let cells = [];
+        let mines = [];
+        let flags = [];
+        let gameover = false;
+        let currentScore = 0;
+        let bestScore = localStorage.getItem('bestScore') || 0;
+
+        function init() {
+            // 创建单元格并添加到 HTML 中
+            let minesweeper = document.getElementById('minesweeper');
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    let cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+                    cell.addEventListener('click', handleLeftClick);
+                    cell.addEventListener('contextmenu', handleRightClick);
+                    minesweeper.appendChild(cell);
+                    cells.push(cell);
+                }
+            }
+
+            // 随机放置地雷
+            for (let i = 0; i < MINES; i++) {
+                let mineIndex;
+                do {
+                    mineIndex = Math.floor(Math.random() * cells.length);
+                } while (cells[mineIndex].classList.contains('mine'));
+                cells[mineIndex].classList.add('mine');
+                mines.push(cells[mineIndex]);
+            }
+
+            updateScore();
+        }
+
+        function handleLeftClick(event) {
+            event.preventDefault();
+            if (gameover) {
+                return;
+            }
+            let cell = event.target;
+            if (cell.classList.contains('flag')) {
+                return;
+            }
+            if (cell.classList.contains('mine')) {
+                cell.textContent = '雷';
+                cell.style.color = 'red';
+                gameOver(false);
+            } else {
+                let count = getMineCount(cell);
+                if (count > 0) {
+                    cell.textContent = count;
+                    cell.classList.add(`count${count}`);
+                } else {
+                    revealAdjacents(cell);
+                }
+                checkWin();
+            }
+        }
+
+        function handleRightClick(event) {
+            event.preventDefault();
+            if (gameover) {
+                return;
+            }
+            let cell = event.target;
+            if (!cell.classList.contains('flag')) {
+                cell.textContent = '旗';
+                cell.classList.add('flag');
+                flags.push(cell);
+            } else {
+                cell.textContent = '';
+                cell.classList.remove('flag');
+                flags.splice(flags.indexOf(cell), 1);
+            }
+            checkWin();
+        }
+
+        function getMineCount(cell) {
+            let row = parseInt(cell.dataset.row);
+            let col = parseInt(cell.dataset.col);
+            let count = 0;
+            for (let i = -1; i <= 1; i++) {
+                for (let j = -1; j <= 1; j++) {
+                    let r = row + i;
+                    let c = col + j;
+                    if (r >= 0 && r < ROWS && c >= 0 && c < COLS) {
+                        if (cells[r * COLS + c].classList.contains('mine')) {
+                            count++;
+                        }
+                    }
+                }
+            }
+            return count;
+        }
+
+        function revealAdjacents(cell) {
+            let row = parseInt(cell.dataset.row);
+            let col = parseInt(cell.dataset.col);
+            let adjacents = [];
+            for (let i = -1; i <= 1; i++) {
+                for (let j = -1; j <= 1; j++) {
+                    let r = row + i;
+                    let c = col + j;
+                    if (r >= 0 && r < ROWS && c >= 0 && c < COLS) {
+                        let adj = cells[r * COLS + c];
+                        if (!adj.classList.contains('revealed') && !adj.classList.contains('flag')) {
+                            adjacents.push(adj);
+                        }
+                    }
+                }
+            }
+            cell.classList.add('revealed');
+            if (adjacents.length === 0) {
+                for (let adj of adjacents) {
+                    revealAdjacents(adj);
+                }
+            } else {
+                let count = getMineCount(cell);
+                if (count > 0) {
+                    cell.textContent = count;
+                    cell.classList.add(`count${count}`);
+                }
+            }
+        }
+
+        function checkWin() {
+            if (flags.length === MINES) {
+                let guessedMines = flags.filter(flag => flag.classList.contains('mine'));
+                if (guessedMines.length === MINES) {
+                    gameOver(true);
+                }
+            }
+        }
+
+        function gameOver(win) {
+            gameover = true;
+            for (let mine of mines) {
+                mine.classList.add('revealed');
+                mine.textContent = '雷';
+                mine.style.color = 'red';
+            }
+            if (win) {
+                alert('你赢了！');
+                currentScore = ROWS * COLS - MINES - currentScore;
+                updateScore();
+                if (currentScore < bestScore || bestScore === 0) {
+                    bestScore = currentScore;
+                    localStorage.setItem('bestScore', bestScore);
+                }
+            } else {
+                alert('你输了！');
+                currentScore = 0;
+                updateScore();
+            }
+        }
+
+        function updateScore() {
+            document.getElementById('bestscore').textContent = bestScore;
+            document.getElementById('currentscore').textContent = currentScore;
+        }
+
+        function reset() {
+            for (let cell of cells) {
+                cell.classList.remove('mine', 'flag', 'revealed', 'count1', 'count2', 'count3');
+                cell.textContent = '';
+            }
+            cells = [];
+            mines = [];
+            flags = [];
+            gameover = false;
+            currentScore = 0;
+
+            init();
+        }
+
+        init();
+        document.getElementById('restart').addEventListener('click', reset);
+    </script>
+</body>
+</html>
+<button onclick="window.location.href='https://youreln{$rthSuffix}/'">返回</button>

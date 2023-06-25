@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>卢管家数字华容道</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+            font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+
+        td {
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 30px;
+            border: 2px solid #ccc;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        td:hover {
+            background-color: #f5f5f5;
+        }
+
+        td.empty {
+            background-color: white;
+            border: none;
+            cursor: default;
+        }
+
+        .score {
+            font-size: 24px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            font-size: 18px;
+            color: red;
+            margin-bottom: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background-color: #008CBA;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #006D9E;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">卢管家数字华容道</h1>
+        <table id="puzzle">
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>6</td>
+                    <td>7</td>
+                    <td>8</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>10</td>
+                    <td>11</td>
+                    <td class="empty"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="score"></div>
+        <div class="message"></div>
+        <div class="button-container">
+            <button id="restart-button">重新开始</button>
+            <button id="share-button">分享分数</button>
+        </div>
+    </div>
+    <script>
+        // 获取DOM元素
+        var puzzle = document.getElementById("puzzle");
+        var scoreDiv = document.querySelector(".score");
+        var messageDiv = document.querySelector(".message");
+        var restartButton = document.getElementById("restart-button");
+        var shareButton = document.getElementById("share-button");
+
+        // 初始化游戏
+        var board = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, null];
+        var moves = 0;
+        initBoard();
+
+        // 给每个格子添加点击事件
+        for (var i = 0; i < puzzle.rows.length; i++) {
+            for (var j = 0; j < puzzle.rows[i].cells.length; j++) {
+                puzzle.rows[i].cells[j].addEventListener("click", function() {
+                    if (!this.classList.contains("empty")) {
+                        var x = this.cellIndex;
+                        var y = this.parentNode.rowIndex;
+                        var emptyX = getEmptyCell().cellIndex;
+                        var emptyY = getEmptyCell().parentNode.rowIndex;
+                        if ((x === emptyX && Math.abs(y - emptyY) === 1) || (y === emptyY && Math.abs(x - emptyX) === 1)) {
+                            swapCells(this, getEmptyCell());
+                            moves++;
+                            scoreDiv.textContent = "步数：" + moves;
+                            if (checkWin()) {
+                                messageDiv.textContent = "恭喜你，完成了华容道！";
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // 给重新开始按钮添加点击事件
+        restartButton.addEventListener("click", function() {
+            board = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, null]);
+            moves = 0;
+            initBoard();
+            scoreDiv.textContent = "步数：" + moves;
+            messageDiv.textContent = "";
+        });
+
+        // 给分享按钮添加点击事件
+        shareButton.addEventListener("click", function() {
+            html2canvas(document.querySelector(".container")).then(function(canvas) {
+                var imgData = canvas.toDataURL();
+                var link = document.createElement("a");
+                link.download = "puzzle-score.png";
+                link.href = imgData;
+                link.click();
+            });
+        });
+
+        // 初始化数字布局
+        function initBoard() {
+            for (var i = 0; i < puzzle.rows.length; i++) {
+                for (var j = 0; j < puzzle.rows[i].cells.length; j++) {
+                    var cell = puzzle.rows[i].cells[j];
+                    if (board[i * 4 + j]) {
+                        cell.textContent = board[i * 4 + j];
+                        cell.classList.remove("empty");
+                    } else {
+                        cell.textContent = "";
+                        cell.classList.add("empty");
+                    }
+                }
+            }
+        }
+
+        // 获取空白格子
+        function getEmptyCell() {
+            return puzzle.querySelector(".empty");
+        }
+
+        // 交换两个格子的内容
+        function swapCells(cell1, cell2) {
+            var temp = cell1.textContent;
+            cell1.textContent = cell2.textContent;
+            cell2.textContent = temp;
+            cell1.classList.toggle("empty");
+            cell2.classList.toggle("empty");
+        }
+
+        // 检查是否完成游戏
+        function checkWin() {
+            var index = 1;
+            for (var i = 0; i < puzzle.rows.length; i++) {
+                for (var j = 0; j < puzzle.rows[i].cells.length; j++) {
+                    if (puzzle.rows[i].cells[j].textContent != index.toString()) {
+                        return false;
+                    }
+                    index++;
+                }
+            }
+            return true;
+        }
+
+        // Fisher-Yates算法随机打乱数组
+        function shuffle(array) {
+            var currentIndex = array.length, temporaryValue, randomIndex;
+            while (0 !== currentIndex) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+                temporaryValue = array[currentIndex];
+                array[currentIndex] = array[randomIndex];
+                array[randomIndex] = temporaryValue;
+            }
+            return array;
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.3.2/dist/html2canvas.min.js"></script>
+</body>
+</html>

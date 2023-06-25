@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>猜数字游戏</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        p {
+            color: #666;
+        }
+
+        #guess-input {
+            width: 150px;
+            padding: 5px;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        #feedback {
+            margin-top: 10px;
+            color: #333;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        #submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #submit-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>猜数字游戏</h1>
+    <p>我已经想好了一个1到100之间的整数，请尽量少的猜出这个数字。</p>
+    <input type="number" id="guess-input" min="1" max="100">
+    <br>
+    <button id="submit-btn" onclick="checkGuess()">提交</button>
+    <p id="feedback"></p>
+    <p id="attempts"></p>
+
+    <script>
+        var randomNumber = Math.floor(Math.random() * 100) + 1;
+        var feedback = document.getElementById("feedback");
+        var attempts = document.getElementById("attempts");
+        var count = 0;
+
+        function checkGuess() {
+            var guessInput = document.getElementById("guess-input");
+            var guess = parseInt(guessInput.value);
+
+            if (isNaN(guess)) {
+                feedback.textContent = "请输入一个有效的数字！";
+            } else {
+                count++;
+                if (guess === randomNumber) {
+                    feedback.textContent = "恭喜你，猜对了！";
+                    feedback.style.color = "#4CAF50";
+                    guessInput.disabled = true;
+                    document.getElementById("submit-btn").disabled = true;
+                } else if (guess < randomNumber) {
+                    feedback.textContent = "太小了，请再次尝试！";
+                    feedback.style.color = "#f44336";
+                } else {
+                    feedback.textContent = "太大了，请再次尝试！";
+                    feedback.style.color = "#f44336";
+                }
+            }
+
+            guessInput.value = "";
+            guessInput.focus();
+            attempts.textContent = "猜测次数：" + count;
+        }
+    </script>
+</body>
+</html>
