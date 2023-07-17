@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+	<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?83ffde2d593928c85cc6bfffcf0e7278";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Youreln工具箱</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        .settings-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #3498db;
+            color: white;
+            width: 200px;
+            height: 50px;
+            border-radius: 25px;
+            font-size: 18px;
+            text-decoration: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .settings-button i {
+            margin-right: 10px;
+        }
+
+        .settings-button:hover {
+            background-color: #ffffff;
+            transform: scale(1.05);
+        }
+        .container {
+            max-width: 100%;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .toolbox {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-gap: 20px;
+            justify-items: center;
+            margin-top: 20px;
+        }
+
+        .toolbox__item {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f2f2f2;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+        /* 适用于手机屏幕 */
+        @media (max-width: 600px) {
+          .toolbox__item {
+            width: 100%;
+            height: auto;
+          }
+          
+          .toolbox__item-icon {
+            font-size: 10vw; /* 修改为更合适的图标大小 */
+          }
+        }
+
+        .toolbox__item:hover {
+            background-color: #e2e2e2;
+        }
+
+        .toolbox__item a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .toolbox__item-icon {
+            font-size: 48px; /* 修改为更合适的图标大小 */
+            margin-bottom: 10px;
+        }
+
+        .toolbox__item-title {
+            text-align: center;
+        }
+
+        .settings {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .settings__button {
+            padding: 5px 10px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .settings__button:hover {
+            background-color: #e2e2e2;
+        }
+
+        .contact {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .contact__email {
+            font-weight: bold;
+            color: blue;
+        }
+
+        .website {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .website__link {
+            color: white;
+        }
+    </style>
+    <link rel="stylesheet" href="<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">">
+</head>
+<body>
+    <div class="container">
+        <h1>Youreln工具箱App</h1>
+
+        <div class="toolbox">
+            <div class="toolbox__item">
+<a href="亲戚关系计算器.html">
+                    <div class="toolbox__item-icon"><i class="fas fa-users"></i></div>
+                    <div class="toolbox__item-title">亲戚关系计算器</div>
+                </a>
+            </div>
+            <div class="toolbox__item">
+                <a href="体重BMI计算器.html">
+                    <div class="toolbox__item-icon"><i class="fas fa-weight"></i></div>
+                    <div class="toolbox__item-title">体重BMI计算器</div>
+                </a>
+            </div>
+            <div class="toolbox__item">
+                <a href="倒计时.html">
+                    <div class="toolbox__item-icon"><i class="fas fa-hourglass-start"></i></div>
+                    <div class="toolbox__item-title">倒计时</div>
+                </a>
+            </div>
+            <div class="toolbox__item">
+                <a href="单位转换.html">
+                    <div class="toolbox__item-icon"><i class="fas fa-exchange-alt"></i></div>
+                    <div class="toolbox__item-title">单位转换</div>
+                </a>
+            </div>
+			<div class="toolbox__item">
+    <a href="密码生成器.html">
+        <div class="toolbox__item-icon"><i class="fas fa-key"></i></div>
+        <div class="toolbox__item-title">密码生成器</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="摩斯电码.html">
+        <div class="toolbox__item-icon"><i class="fas fa-code"></i></div>
+        <div class="toolbox__item-title">摩斯电码</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="文字转语音.html">
+        <div class="toolbox__item-icon"><i class="fas fa-volume-up"></i></div>
+        <div class="toolbox__item-title">文字转语音</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="番茄时钟.html">
+        <div class="toolbox__item-icon"><i class="fas fa-clock"></i></div>
+        <div class="toolbox__item-title">番茄时钟</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="网络测速.html">
+        <div class="toolbox__item-icon"><i class="fas fa-network-wired"></i></div>
+        <div class="toolbox__item-title">网络测速</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="计算器.html">
+        <div class="toolbox__item-icon"><i class="fas fa-calculator"></i></div>
+        <div class="toolbox__item-title">计算器</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="银行卡类型查询.html">
+        <div class="toolbox__item-icon"><i class="fas fa-credit-card"></i></div>
+        <div class="toolbox__item-title">银行卡类型查询</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="函数绘制.html">
+        <div class="toolbox__item-icon"><i class="fas fa-chart-line"></i></div>
+        <div class="toolbox__item-title">函数绘制</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="成绩分析系统.html">
+        <div class="toolbox__item-icon"><i class="fas fa-chart-bar"></i></div>
+        <div class="toolbox__item-title">成绩分析</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="文件格式转换工具.html">
+        <div class="toolbox__item-icon"><i class="fas fa-file-pdf"></i></div>
+        <div class="toolbox__item-title">HTML转PDF</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="灵魂涂鸦/index.html">
+        <div class="toolbox__item-icon"><i class="fas fa-paint-brush"></i></div>
+        <div class="toolbox__item-title">灵魂涂鸦</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="小记.html">
+        <div class="toolbox__item-icon"><i class="fas fa-sticky-note"></i></div>
+        <div class="toolbox__item-title">小记</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="分享框.html">
+        <div class="toolbox__item-icon"><i class="fas fa-edit"></i></div>
+        <div class="toolbox__item-title">冷静草稿框</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="二维码生成.html">
+        <div class="toolbox__item-icon"><i class="fas fa-qrcode"></i></div>
+        <div class="toolbox__item-title">二维码生成</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="屏幕测试.html">
+        <div class="toolbox__item-icon"><i class="fas fa-desktop"></i></div>
+        <div class="toolbox__item-title">屏幕测试</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="查快递.html">
+        <div class="toolbox__item-icon"><i class="fas fa-truck"></i></div>
+        <div class="toolbox__item-title">查快递</div>
+    </a>
+</div>
+</div>
+<h1>游戏</h1>
+<div class="toolbox">
+<div class="toolbox__item">
+<a href="扫雷.html">
+<div class="toolbox__item-icon"><i class="fas fa-bomb"></i></div>
+<div class="toolbox__item-title">扫雷</div>
+</a>
+</div>
+<div class="toolbox__item">
+<a href="猜拳游戏.html">
+<div class="toolbox__item-icon"><i class="fas fa-hand-paper"></i></div>
+<div class="toolbox__item-title">猜拳游戏</div>
+</a>
+</div>
+<div class="toolbox__item">
+<a href="数字华容道.html">
+<div class="toolbox__item-icon"><i class="fas fa-puzzle-piece"></i></div>
+<div class="toolbox__item-title">数字华容道</div>
+</a>
+</div>
+<div class="toolbox__item">
+<a href="点击方块.html">
+<div class="toolbox__item-icon"><i class="fas fa-square"></i></div>
+<div class="toolbox__item-title">点击方块</div>
+</a>
+</div>
+
+<div class="toolbox__item">
+    <a href="山鸡跳跳乐.html">
+        <div class="toolbox__item-icon"><i class="fas fa-frog"></i></div>
+        <div class="toolbox__item-title">山鸡跳跳乐</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="打砖块.html">
+        <div class="toolbox__item-icon"><i class="fas fa-th-large"></i></div>
+        <div class="toolbox__item-title">打砖块</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="文字游戏.html">
+        <div class="toolbox__item-icon"><i class="fas fa-font"></i></div>
+        <div class="toolbox__item-title">文字游戏</div>
+    </a>
+</div>
+<div class="toolbox__item">
+    <a href="猜数字.html">
+        <div class="toolbox__item-icon"><i class="fas fa-check"></i></div>
+        <div class="toolbox__item-title">猜数字</div>
+    </a>
+</div>
+            </div>
+        </div>
+<a href="设置.html" class="settings-button">
+        <i class="fas fa-cog"></i>
+        设置
+    </a>
