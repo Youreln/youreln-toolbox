@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+	<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?83ffde2d593928c85cc6bfffcf0e7278";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <h1>函数图像绘制工具</h1>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .info-box {
+            background-color: #f0f0f0;
+            border: 2px solid #cccccc;
+            padding: 20px;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            margin-top: 50px;
+            border-radius: 5px;
+        }
+
+        .info-box h2 {
+            color: #333333;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #555555;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="info-box">
+        <h2>注意！</h2>
+        <p>请点击表达式模式按钮后才能开始手绘。线条会反着来</p>
+    <div>
+        <button onclick="changeMode()">手绘模式</button>
+        <button onclick="changeMode()">表达式模式</button>
+    </div>
+
+    <div id="expression-draw-options" style="display:none;">
+        <label for="function-type">函数类型:</label>
+        <select id="function-type">
+            <option value="linear">线性函数</option>
+            <option value="quadratic">二次函数</option>
+            <option value="cubic">三次函数</option>
+            <option value="logarithmic">对数函数</option>
+        </select>
+
+        <label for="expression">函数表达式:</label>
+        <input type="text" id="expression">
+
+        <button onclick="addExpression()">添加</button>
+        <button onclick="drawExpressions()">绘制</button>
+    </div>
+
+    <div>
+        <button onclick="clearCanvas()">清空</button>
+        <button onclick="saveCanvas()">保存</button>
+    </div>
+
+    <canvas id="canvas" width="800" height="400"></canvas>
+    <div id="coordinates"></div>
+    <ul id="expression-list"></ul>
+
+    <script>
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        var expressionDrawOptions = document.getElementById('expression-draw-options');
+        var functionTypeSelect = document.getElementById('function-type');
+        var expressions = [];
+
+        var isDrawing = false;
+
+        // 设置默认的显示选项
+        expressionDrawOptions.style.display = 'none';
+
+        // 当模式选择发生变化时，更新显示选项
+        function changeMode() {
+            var expressionButton = document.getElementById('expression-draw-options');
+            var selectedMode = event.target.innerText === '手绘模式' ? 'hand' : 'expression';
+            
+            if (selectedMode === 'hand') {
+                expressionDrawOptions.style.display = 'none';
+                canvas.removeEventListener('touchstart', startDrawing);
+                canvas.removeEventListener('touchmove', draw);
+                canvas.removeEventListener('touchend', stopDrawing);
+            } else if (selectedMode === 'expression') {
+                expressionDrawOptions.style.display = 'block';
+                canvas.addEventListener('touchstart', startDrawing);
+                canvas.addEventListener('touchmove', draw);
+                canvas.addEventListener('touchend', stopDrawing);
+            }
+        }
+
+        // 清空画布
+        function clearCanvas() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            updateCoordinates('');
+            expressions = [];
+            updateExpressionList();
+        }
+
+        // 保存画布
+        function saveCanvas() {
+            var dataURL = canvas.toDataURL();
+            var link = document.createElement('a');
+            link.href = dataURL;
+            link.download = 'canvas.png';
+            link.click();
+        }
+
+        // 添加表达式
+        function addExpression() {
+            var expressionInput = document.getElementById('expression');
+            var expression = expressionInput.value;
+            expressions.push(expression);
+            expressionInput.value = '';
+            updateExpressionList();
+        }
+
+        // 更新函数表达式列表
+        function updateExpressionList() {
+            var expressionList = document.getElementById('expression-list');
+            expressionList.innerHTML = ''; // 清空列表
+
+            for (var i = 0; i < expressions.length; i++) {
+                var expression = expressions[i];
+                var li = document.createElement('li');
+                li.innerText = expression;
+                expressionList.appendChild(li);
+            }
+        }
+
+        // 绘制所有表达式图像
+        function drawExpressions() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            drawCoordinateSystem();
+
+            for (var i = 0; i < expressions.length; i++) {
+                var expression = expressions[i];
+                var func = createFunction(expression);
+                var functionType = functionTypeSelect.value;
+
+                context.beginPath();
+                context.strokeStyle = getRandomColor();
+
+                for (var x = 0; x <= canvas.width; x++) {
+                    var y = calculateFunctionValue(functionType, func, x);
+                    context.lineTo(x, canvas.height - y); // 不需要坐标翻转
+                }
+
+                context.stroke();
+                updateCoordinates(`当前函数表达式: ${expression}`);
+            }
+        }
+
+        // 创建函数对象
+        function createFunction(expression) {
+            return new Function('x', 'return ' + expression);
+        }
+
+        // 计算函数值
+        function calculateFunctionValue(functionType, func, x) {
+            if (functionType === 'linear') {
+                return func(x);
+            } else if (functionType === 'quadratic') {
+                return Math.pow(func(x), 2);
+            } else if (functionType === 'cubic') {
+                return Math.pow(func(x), 3);
+            } else if (functionType === 'logarithmic') {
+                return Math.log(func(x));
+            }
+        }
+
+        // 绘制坐标系
+        function drawCoordinateSystem() {
+            var xAxisMargin = 40;
+            var yAxisMargin = 20;
+
+            // 绘制 x 轴
+            context.beginPath();
+            context.moveTo(0, canvas.height - yAxisMargin);
+            context.lineTo(canvas.width, canvas.height - yAxisMargin);
+            context.stroke();
+
+            // 绘制 y 轴
+            context.beginPath();
+            context.moveTo(xAxisMargin, 0);
+            context.lineTo(xAxisMargin, canvas.height);
+            context.stroke();
+        }
+
+        // 更新坐标信息
+        function updateCoordinates(text) {
+            var coordinates = document.getElementById('coordinates');
+            coordinates.innerText = text;
+        }
+
+        // 触摸开始
+        function startDrawing(event) {
+            event.preventDefault();
+
+            var rect = canvas.getBoundingClientRect();
+            var touch = event.touches[0];
+            var x = touch.clientX - rect.left;
+            var y = canvas.height - (touch.clientY - rect.top);
+
+            context.beginPath();
+            context.moveTo(x, y);
+            isDrawing = true;
+        }
+
+        // 触摸移动
+        function draw(event) {
+            event.preventDefault();
+
+            if (isDrawing) {
+                var rect = canvas.getBoundingClientRect();
+                var touch = event.touches[0];
+                var x = touch.clientX - rect.left;
+                var y = canvas.height - (touch.clientY - rect.top);
+
+                context.lineTo(x, y);
+                context.stroke();
+            }
+        }
+
+        // 触摸结束
+        function stopDrawing(event) {
+            event.preventDefault();
+
+            isDrawing = false;
+        }
+
+        // 获取随机颜色
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // 监听鼠标移动事件
+        canvas.addEventListener('mousemove', function(e) {
+            var rect = canvas.getBoundingClientRect();
+            var x = e.clientX - rect.left;
+            var y = canvas.height - (e.clientY - rect.top);
+            updateCoordinates(`当前坐标: (${x}, ${y})`);
+        });
+
+        // 开始绘图
+        canvas.addEventListener('mousedown', function(event) {
+            context.beginPath();
+            var rect = canvas.getBoundingClientRect();
+            var x = event.clientX - rect.left;
+            var y = canvas.height - (event.clientY - rect.top);
+            context.moveTo(x, y);
+
+            isDrawing = true;
+        });
+
+        // 绘制路径
+        canvas.addEventListener('mousemove', function(event) {
+            if (isDrawing) {
+                var rect = canvas.getBoundingClientRect();
+                var x = event.clientX - rect.left;
+                var y = canvas.height - (event.clientY - rect.top);
+                context.lineTo(x, y);
+                context.stroke();
+            }
+        });
+
+        // 停止绘图
+        canvas.addEventListener('mouseup', function() {
+            isDrawing = false;
+        });
+    </script>
+</body>
+</html>
