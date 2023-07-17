@@ -1,273 +1,350 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
+	<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?83ffde2d593928c85cc6bfffcf0e7278";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Youreln工具箱</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-no5q7vA75rwu6X8ikdbLgG7/tMtadi1VhEaLKroTzO4vLQsURaM6Uom3wLkZbXsb1wCH4+YJ2kAAHqYh00/QJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<style>
-* {
-margin: 0;
-padding: 0;
-box-sizing: border-box;
-}
+    <meta charset="UTF-8">
+    <title>Youreln工具箱</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f1f8e9;
-}
+        .container {
+            max-width: 100%;
+            margin: 0;
+            padding: 20px;
+        }
 
-header {
-  text-align: center;
-  padding: 20px 0;
-  background-color: #81c784;
-}
+        h1 {
+            text-align: center;
+        }
 
-h1 {
-  color: #fff;
-  font-size: 40px;
-  font-weight: bold;
-}
+        .toolbox {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-gap: 20px;
+            justify-items: center;
+            margin-top: 20px;
+        }
 
-main {
-  margin: 40px auto;
-  max-width: 1200px;
-}
+        .toolbox__item {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f2f2f2;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
 
-.category {
-  margin-bottom: 40px;
-  overflow-y: auto;
-}
+        /* 适用于手机屏幕 */
+        @media (max-width: 600px) {
+          .toolbox__item {
+            width: 100%;
+            height: auto;
+          }
+          
+          .toolbox__item-icon {
+            font-size: 10vw; /* 修改为更合适的图标大小 */
+          }
+        }
 
-h2 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
+        .toolbox__item:hover {
+            background-color: #e2e2e2;
+        }
 
-.tool-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: 10px -10px;
-}
+        .toolbox__item a {
+            text-decoration: none;
+            color: inherit;
+        }
 
-.tool {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 10px;
-  width: 200px;
-  background-color: #fff;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  transition: all .3s ease;
-}
+        .toolbox__item-icon {
+            font-size: 48px; /* 修改为更合适的图标大小 */
+            margin-bottom: 10px;
+        }
 
-.tool:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-}
+        .toolbox__item-title {
+            text-align: center;
+        }
 
-.icon {
-  font-size: 80px;
-  margin-bottom: 10px;
-}
+        .settings {
+            margin-top: 20px;
+            text-align: center;
+        }
 
-span {
-  font-size: 18px;
-  font-weight: bold;
-  text-align: center;
-}
+        .settings__button {
+            padding: 5px 10px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
 
-footer {
-  background-color: #81c784;
-  color: #fff;
-  text-align: center;
-  padding: 20px;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-}
+        .settings__button:hover {
+            background-color: #e2e2e2;
+        }
 
-.link {
-  color: #fff;
-  text-decoration: underline;
-}
+        .contact {
+            text-align: center;
+            margin-top: 20px;
+        }
 
-.link:hover {
-  color: #e0f7fa;
-}
+        .contact__email {
+            font-weight: bold;
+            color: blue;
+        }
 
-/* 自定义滚动条样式 */
-.category::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-  background-color: #f1f8e9;
-}
+        .website {
+            text-align: center;
+            margin-top: 20px;
+        }
 
-.category::-webkit-scrollbar-thumb {
-  background-color: #a5d6a7;
-  border-radius: 4px;
-  box-shadow: inset 2px 2px 2px #81c784;
-}
-
-/* 底部栏样式 */
-.bottom-bar {
-  background-color: #81c784;
-  color: #fff;
-  text-align: center;
-  padding: 10px;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-}
-
-.bottom-bar .links {
-  margin-bottom: 10px;
-}
-
-.bottom-bar .links a {
-  color: #fff;
-  text-decoration: none;
-  margin: 0 10px;
-}
-</style>
-<meta name="msvalidate.01" content="C826A0CE17D2237188495994898BD5E5" />
+        .website__link {
+            color: blue;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-<!-- 工具箱主页 -->
-<header>
-<h1>Youreln工具箱</h1>
-<h2>一个免费、开源的工具箱</h2>
-</header>
-...
-<div class="category">
-<h2>工具</h2>
-<div class="tool-row">
-<a href="亲戚关系计算器.html" class="tool">
-<i class="icon fas fa-users"></i>
-<span>亲戚关系计算器</span>
-</a>
-<a href="体重BMI计算器.html" class="tool">
-<i class="icon fas fa-weight"></i>
-<span>体重BMI计算器</span>
-</a>
-<a href="倒计时.html" class="tool">
-<i class="icon far fa-hourglass"></i>
-<span>倒计时</span>
-</a>
-<a href="单位转换.html" class="tool">
-<i class="icon fas fa-ruler-combined"></i>
-<span>单位转换</span>
-</a>
-</div>
-<div class="tool-row">
-<a href="密码生成器.html" class="tool">
-<i class="icon fas fa-key"></i>
-<span>密码生成器</span>
-</a>
-<a href="摩斯电码.html" class="tool">
-<i class="icon fas fa-broadcast-tower"></i>
-<span>摩斯电码</span>
-</a>
-<a href="文字转语音.html" class="tool">
-<i class="icon fas fa-volume-up"></i>
-<span>文字转语音</span>
-</a>
-<a href="番茄时钟.html" class="tool">
-<i class="icon fas fa-clock"></i>
-<span>番茄时钟</span>
-</a>
-</div>
-<div class="tool-row">
-<a href="网络测速.html" class="tool">
-<i class="icon fas fa-network-wired"></i>
-<span>网络测速</span>
-</a>
-<a href="计算器.html" class="tool">
-<i class="icon fas fa-calculator"></i>
-<span>计算器</span>
-</a>
-<a href="银行卡类型查询.html" class="tool">
-<i class="icon far fa-credit-card"></i>
-<span>银行卡类型查询</span>
-</a>
-<a href="函数图像绘制工具.html" class="tool">
-<i class="icon far fa-credit-card"></i>
-<span>函数绘制</span>
-</a>
-<a href="成绩分析系统.html" class="tool">
-<i class="icon far fa-credit-card"></i>
-<span>成绩分析</span>
-</a>
-<a href="文件格式转换工具.html" class="tool">
-<i class="icon fas fa-cat"></i>
-<span>HTML转PDF</span>
-</a>
-<a href="屏幕测试.html" class="tool">
-<i class="icon fas fa-cat"></i>
-<span>屏幕测试</span>
-</a>
-<a href="二维码生成.html" class="tool">
-<i class="icon fas fa-cat"></i>
-<span>二维码生成</span>
-</a>
-<a href="分享框.html" class="tool">
-<i class="icon fas fa-file-upload"></i>
-<span>冷静草稿框</span>
-</a>		
-<a href="查快递.html" class="tool">
-<i class="icon fas fa-file-upload"></i>
-<span>查快递</span>
-</a>		
-</div>
-</div>
-<div class="category">
-<h2>游戏</h2>
-<div class="tool-row">
-<a href="扫雷.html" class="tool">
-<i class="icon fas fa-bomb"></i>
-<span>扫雷</span>
-</a>
-<a href="猜拳游戏.html" class="tool">
-<i class="icon far fa-hand-rock"></i>
-<span>猜拳游戏</span>
-</a>
-<a href="数字华容道.html" class="tool">
-<i class="icon fab fa-wolf-pack-battalion"></i>
-<span>数字华容道</span>
-</a>
-<a href="点击方块.html" class="tool">
-<i class="icon fas fa-cat"></i>
-<span>点击方块</span>
-</a>
-<a href="山鸡跳跳乐.html" class="tool">
-<i class="icon fas fa-fighter-jet"></i>
-<span>山鸡跳跳乐</span>
-</a>
-<a href="打砖块.html" class="tool">
-<i class="icon fas fa-cat"></i>
-<span>打砖块</span>
-</a>	
-<a href="文字游戏.html" class="tool">
-<i class="icon fas fa-cat"></i>
-<span>文字游戏</span>
-</a>
-</div>
-</div>
-</main>
+    <div class="container">
+        <h1>Youreln工具箱</h1>
 
-<footer class="bottom-bar">
-<div class="links">
-<a href="https://youreln.gitee.io/" target="_blank" class="link">官网</a>
-<a href="https://support.qq.com/products/502768" target="_blank" class="link">中梧教育</a>
-<a href="mailto:youreln@qq.com" class="link">联系我邮箱</a>
-<a href="https://gitee.com/Youreln/youreln-toolbox" target="_blank" class="link">开源地址Gitee</a>
+        <div class="toolbox">
+            <div class="toolbox__item">
+<a href="亲戚关系计算器.html">
+                    <div class="toolbox__item-icon"><i class="fas fa-users"></i></div>
+                    <div class="toolbox__item-title">亲戚关系计算器</div>
+                </a>
+            </div>
+            <div class="toolbox__item">
+                <a href="体重BMI计算器.html">
+                    <div class="toolbox__item-icon"><i class="fas fa-weight"></i></div>
+                    <div class="toolbox__item-title">体重BMI计算器</div>
+                </a>
+            </div>
+            <div class="toolbox__item">
+                <a href="倒计时.html">
+                    <div class="toolbox__item-icon"><i class="fas fa-hourglass-start"></i></div>
+                    <div class="toolbox__item-title">倒计时</div>
+                </a>
+            </div>
+            <div class="toolbox__item">
+                <a href="单位转换.html">
+                    <div class="toolbox__item-icon"><i class="fas fa-exchange-alt"></i></div>
+                    <div class="toolbox__item-title">单位转换</div>
+                </a>
+            </div>
+			<div class="toolbox__item">
+    <a href="密码生成器.html">
+        <div class="toolbox__item-icon"><i class="fas fa-key"></i></div>
+        <div class="toolbox__item-title">密码生成器</div>
+    </a>
 </div>
-<div class="contact">
+
+<div class="toolbox__item">
+    <a href="摩斯电码.html">
+        <div class="toolbox__item-icon"><i class="fas fa-code"></i></div>
+        <div class="toolbox__item-title">摩斯电码</div>
+    </a>
 </div>
-</footer>
+
+<div class="toolbox__item">
+    <a href="文字转语音.html">
+        <div class="toolbox__item-icon"><i class="fas fa-volume-up"></i></div>
+        <div class="toolbox__item-title">文字转语音</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="番茄时钟.html">
+        <div class="toolbox__item-icon"><i class="fas fa-clock"></i></div>
+        <div class="toolbox__item-title">番茄时钟</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="网络测速.html">
+        <div class="toolbox__item-icon"><i class="fas fa-network-wired"></i></div>
+        <div class="toolbox__item-title">网络测速</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="计算器.html">
+        <div class="toolbox__item-icon"><i class="fas fa-calculator"></i></div>
+        <div class="toolbox__item-title">计算器</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="银行卡类型查询.html">
+        <div class="toolbox__item-icon"><i class="fas fa-credit-card"></i></div>
+        <div class="toolbox__item-title">银行卡类型查询</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="函数绘制.html">
+        <div class="toolbox__item-icon"><i class="fas fa-chart-line"></i></div>
+        <div class="toolbox__item-title">函数绘制</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="成绩分析.html">
+        <div class="toolbox__item-icon"><i class="fas fa-chart-bar"></i></div>
+        <div class="toolbox__item-title">成绩分析</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="HTML转PDF.html">
+        <div class="toolbox__item-icon"><i class="fas fa-file-pdf"></i></div>
+        <div class="toolbox__item-title">HTML转PDF</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="灵魂涂鸦.html">
+        <div class="toolbox__item-icon"><i class="fas fa-paint-brush"></i></div>
+        <div class="toolbox__item-title">灵魂涂鸦</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="小记.html">
+        <div class="toolbox__item-icon"><i class="fas fa-sticky-note"></i></div>
+        <div class="toolbox__item-title">小记</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="分享框.html">
+        <div class="toolbox__item-icon"><i class="fas fa-edit"></i></div>
+        <div class="toolbox__item-title">冷静草稿框</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="二维码生成.html">
+        <div class="toolbox__item-icon"><i class="fas fa-qrcode"></i></div>
+        <div class="toolbox__item-title">二维码生成</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="屏幕测试.html">
+        <div class="toolbox__item-icon"><i class="fas fa-desktop"></i></div>
+        <div class="toolbox__item-title">屏幕测试</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="查快递.html">
+        <div class="toolbox__item-icon"><i class="fas fa-truck"></i></div>
+        <div class="toolbox__item-title">查快递</div>
+    </a>
+</div>
+</div>
+<h1>游戏</h1>
+<div class="toolbox">
+<div class="toolbox__item">
+<a href="扫雷.html">
+<div class="toolbox__item-icon"><i class="fas fa-bomb"></i></div>
+<div class="toolbox__item-title">扫雷</div>
+</a>
+</div>
+<div class="toolbox__item">
+<a href="猜拳游戏.html">
+<div class="toolbox__item-icon"><i class="fas fa-hand-paper"></i></div>
+<div class="toolbox__item-title">猜拳游戏</div>
+</a>
+</div>
+<div class="toolbox__item">
+<a href="数字华容道.html">
+<div class="toolbox__item-icon"><i class="fas fa-puzzle-piece"></i></div>
+<div class="toolbox__item-title">数字华容道</div>
+</a>
+</div>
+<div class="toolbox__item">
+<a href="点击方块.html">
+<div class="toolbox__item-icon"><i class="fas fa-square"></i></div>
+<div class="toolbox__item-title">点击方块</div>
+</a>
+</div>
+
+<div class="toolbox__item">
+    <a href="山鸡跳跳乐.html">
+        <div class="toolbox__item-icon"><i class="fas fa-frog"></i></div>
+        <div class="toolbox__item-title">山鸡跳跳乐</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="打砖块.html">
+        <div class="toolbox__item-icon"><i class="fas fa-th-large"></i></div>
+        <div class="toolbox__item-title">打砖块</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="文字游戏.html">
+        <div class="toolbox__item-icon"><i class="fas fa-font"></i></div>
+        <div class="toolbox__item-title">文字游戏</div>
+    </a>
+</div>
+<div class="toolbox__item">
+    <a href="猜数字.html">
+        <div class="toolbox__item-icon"><i class="fas fa-check"></i></div>
+        <div class="toolbox__item-title">猜数字</div>
+    </a>
+</div>
+            </div>
+        </div>
+
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .footer {
+            background-color: #f3f3f3;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .footer a {
+            color: #555;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面内容 -->
+
+    <div class="footer">
+        <a href="mailto:youreln@qq.com">联系邮箱：youreln@qq.com</a>
+        <a href="https://youreln.gitee.io" target="_blank">官方网站：youreln.gitee.io</a>
+        <a href="https://youreln.gitee.io/2023/06/26/%E7%94%A8%E6%88%B7%E6%8C%87%E5%8D%97/" target="_blank">介绍</a>
+		<a href="旧pc.html">旧版</a>
+		<a href="https://gitee.com/Youreln/youreln-toolbox" target="_blank" class="link">开源地址Gitee</a>
+</body>
+</html>
+
 </body>
 </html>
