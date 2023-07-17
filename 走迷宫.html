@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>走迷宫游戏</title>
+  <style>
+    body {
+      background-color: #eaf2e3;
+    }
+
+    .maze-container {
+      margin: 20px auto;
+      width: 400px;
+      height: 400px;
+      border: 5px solid #81c784;
+      position: relative;
+    }
+
+    .maze-cell {
+      width: 40px;
+      height: 40px;
+      background-color: #a5d6a7;
+      display: inline-block;
+    }
+
+    .character {
+      width: 40px;
+      height: 40px;
+      background-color: #fff;
+      position: absolute;
+      transition: left 0.2s ease-in-out, top 0.2s ease-in-out;
+    }
+
+    .timer {
+      text-align: center;
+      font-size: 24px;
+      margin-top: 20px;
+    }
+
+    /* 虚拟方向键样式 */
+    .direction-keys {
+      display: flex;
+      justify-content: center;
+    }
+
+    .direction-keys button {
+      width: 50px;
+      height: 50px;
+      margin: 10px;
+      font-size: 24px;
+      background-color: #fff;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <h1>走迷宫游戏</h1>
+
+  <div class="maze-container"></div>
+
+  <div class="timer">计时：<span id="time">0</span>秒</div>
+
+  <input type="file" id="character-img" accept=".jpg, .jpeg, .png">
+
+  <!-- 虚拟方向键 -->
+  <div class="direction-keys">
+    <button id="up">↑</button>
+    <br>
+    <button id="left">←</button>
+    <button id="down">↓</button>
+    <button id="right">→</button>
+  </div>
+
+  <script>
+    var mazeContainer = document.querySelector('.maze-container');
+    var characterImgInput = document.getElementById('character-img');
+    var maze = [];
+    var characterPosition = { x: 0, y: 0 };
+    var startTime = 0;
+    var timer = null;
+
+    characterImgInput.addEventListener('change', function(e) {
+      var reader = new FileReader();
+      reader.onload = function(event) {
+        var imgSrc = event.target.result;
+
+        var character = document.createElement('div');
+        character.classList.add('character');
+        character.style.backgroundImage = `url('${imgSrc}')`;
+
+        characterPosition.x = 0;
+        characterPosition.y = 0;
+
+        character.style.left = characterPosition.x * 40 + 'px';
+        character.style.top = characterPosition.y * 40 + 'px';
+
+        mazeContainer.appendChild(character);
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    });
+
+    function generateMaze() {
+      mazeContainer.innerHTML = '';
+
+      for (let i = 0; i < 10; i++) {
+        maze[i] = [];
+        for (let j = 0; j < 10; j++) {
+          const cell = document.createElement('div');
+          cell.classList.add('maze-cell');
+          maze[i][j] = cell;
+          mazeContainer.appendChild(cell);
+        }
+      }
+
+      // 设置迷宫入口和出口
+      maze[0][0].classList.add('entry');
+      maze[9][9].classList.add('exit');
+
+      // 随机生成迷宫墙壁
+      for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 10; j++) {
+          if (i === 0 && j === 0) continue; // 入口位置
+          if (i === 9 && j === 9) continue; // 出口位置
+          if (Math.random() < 0.3) {
+            maze[i][j].classList.add('wall');
+          }
+        }
+      }
+    }
+
+    function moveCharacter(event) {
+      var key = event.key;
+      var cellWidth = 40;
+      var cellHeight = 40;
+
+      switch (key) {
+        case 'ArrowUp':
+          if (characterPosition.y > 0 && !maze[characterPosition.y - 1][characterPosition.x].classList.contains('wall')) {
+            characterPosition.y--;
+            updateCharacterPosition(cellWidth, cellHeight);
+          }
+          break;
+        case 'ArrowDown':
+          if (
+            characterPosition.y < 9 &&
+            !maze[characterPosition.y + 1][characterPosition.x].classList.contains('wall')
+          ) {
+            characterPosition.y++;
+            updateCharacterPosition(cellWidth, cellHeight);
+          }
+          break;
+        case 'ArrowLeft':
+          if (characterPosition.x > 0 && !maze[characterPosition.y][characterPosition.x - 1].classList.contains('wall')) {
+            characterPosition.x--;
+            updateCharacterPosition(cellWidth, cellHeight);
+          }
+          break;
+        case 'ArrowRight':
+          if (
+            characterPosition.x < 9 &&
+            !maze[characterPosition.y][characterPosition.x + 1].classList.contains('wall')
+          ) {
+            characterPosition.x++;
+            updateCharacterPosition(cellWidth, cellHeight);
+          }
+          break;
+        default:
+          break;
+      }
+    }
+
+    function updateCharacterPosition(cellWidth, cellHeight) {
+      var character = document.querySelector('.character');
+      character.style.left = characterPosition.x * cellWidth + 'px';
+      character.style.top = characterPosition.y * cellHeight + 'px';
+
+      // 判断是否到达出口
+      if (characterPosition.x === 9 && characterPosition.y === 9) {
+        clearInterval(timer);
+        alert('恭喜你成功走出迷宫！');
+      }
+    }
+
+    function startTimer() {
+      startTime = Date.now();
+      timer = setInterval(function() {
+        var currentTime = Math.floor((Date.now() - startTime) / 1000);
+        var timeDisplay = document.getElementById('time');
+        timeDisplay.textContent = currentTime;
+      }, 1000);
+    }
+
+    document.addEventListener('keydown', moveCharacter);
+
+    // 监听虚拟方向键点击事件
+    document.getElementById('up').addEventListener('click', function() {
+      moveCharacter({ key: 'ArrowUp' });
+    });
+    document.getElementById('left').addEventListener('click', function() {
+      moveCharacter({ key: 'ArrowLeft' });
+    });
+    document.getElementById('down').addEventListener('click', function() {
+      moveCharacter({ key: 'ArrowDown' });
+    });
+    document.getElementById('right').addEventListener('click', function() {
+      moveCharacter({ key: 'ArrowRight' });
+    });
+
+    generateMaze();
+    startTimer();
+  </script>
+</body>
+</html>
