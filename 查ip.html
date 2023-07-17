@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IP信息归属地查询</title>
+  <style>
+    body {
+      background-color: #f5f5f5;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      width: 200px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      outline: none;
+    }
+
+    pre {
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>IP信息归属地查询</h1>
+
+    <form id="ipForm">
+      <input type="text" id="ipInput" placeholder="请输入要查询的IP地址" required>
+      <button type="submit">查询</button>
+    </form>
+
+    <pre id="result"></pre>
+  </div>
+
+  <script>
+    var ipForm = document.getElementById('ipForm');
+    var ipInput = document.getElementById('ipInput');
+    var result = document.getElementById('result');
+
+    ipForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      var ip = ipInput.value.trim();
+
+      if (ip === '') {
+        alert('请输入要查询的IP地址');
+        return;
+      }
+
+      var url = 'https://api.vvhan.com/api/getIpInfo?ip=' + ip;
+
+      fetch(url)
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(data) {
+          if (data.success) {
+            var info = data.info;
+            var infoStr = 'IP: ' + data.ip + '\n';
+            infoStr += '所在网络服务商: ' + info.lsp + '\n';
+            infoStr += '国家: ' + info.country + '\n';
+            infoStr += '省份/直辖市: ' + info.prov + '\n';
+            infoStr += '城市: ' + info.city + '\n';
+
+            result.textContent = infoStr;
+          } else {
+            result.textContent = '查询失败，请检查输入的IP地址';
+          }
+        })
+        .catch(function(error) {
+          console.log('请求发生错误', error);
+          result.textContent = '查询失败，请检查网络连接';
+        });
+    });
+  </script>
+</body>
+</html>
