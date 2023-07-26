@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>垃圾分类查询工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #00bfa5;
+        }
+        form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 6px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button[type="submit"] {
+            padding: 6px 12px;
+            font-size: 16px;
+            background-color: #00bfa5;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .result-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 20px;
+        }
+        .result-item {
+            margin-bottom: 10px;
+        }
+        .result-title {
+            font-weight: bold;
+            color: #00bfa5;
+        }
+        .result-value {
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <h1>垃圾分类查询工具</h1>
+    <form id="trashForm">
+        <input type="text" id="inputTrash" placeholder="请输入垃圾名称">
+        <button type="submit">查询</button>
+    </form>
+
+    <div id="resultContainer" class="result-container"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var form = document.getElementById("trashForm");
+            var inputTrash = document.getElementById("inputTrash");
+            var resultContainer = document.getElementById("resultContainer");
+
+            form.addEventListener("submit", function(event) {
+                event.preventDefault(); // 阻止表单提交的默认行为
+
+                var trashName = inputTrash.value.trim();
+
+                // 如果输入框为空，则清空结果并返回
+                if (trashName === "") {
+                    resultContainer.innerHTML = "";
+                    return;
+                }
+
+                // 创建API请求URL
+                var apiUrl = "https://api.vvhan.com/api/la.ji?lj=" + encodeURIComponent(trashName);
+
+                // 发送GET请求
+                fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    // 构建结果内容
+                    var resultHTML = "<div class='result-item'><span class='result-title'>垃圾名称：</span><span class='result-value'>" + data.name + "</span></div>";
+                    resultHTML += "<div class='result-item'><span class='result-title'>垃圾分类：</span><span class='result-value'>" + data.sort + "</span></div>";
+
+                    // 渲染结果
+                    resultContainer.innerHTML = resultHTML;
+                })
+                .catch(error => {
+                    console.log(error);
+                    resultContainer.innerHTML = "";
+                });
+            });
+        });
+    </script>
+</body>
+</html>
