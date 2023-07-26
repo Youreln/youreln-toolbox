@@ -143,15 +143,7 @@
 
         // 分享小记
         function shareNote(note) {
-            var shareMethod = prompt("请选择分享方式（例如：电子邮件、社交媒体等）最好截图分享:");
-
-            // 根据分享方式执行相应的分享操作
-            if (shareMethod) {
-                // TODO: 执行分享操作，将小记内容发送给对应的分享渠道
-                console.log("分享方式：" + shareMethod);
-                console.log("要分享的小记：" + note);
-            }
-        }
+            var shareMethod = alert("长按选择内容进行分享");
 
         // 将小记保存为txt文件并下载
         function downloadNotes() {
