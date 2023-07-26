@@ -1,121 +1,109 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>设置</title>
+
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
+      background-color: rgb(245, 245, 245);
       padding: 20px;
     }
-    
     h1 {
       text-align: center;
       margin-bottom: 30px;
     }
-    
     .setting-container {
       max-width: 500px;
       margin: 0 auto;
-      background-color: #fff;
+      background-color: rgb(255, 255, 255);
       padding: 30px;
       border-radius: 4px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 5px;
     }
-    
     .setting-item {
       margin-bottom: 20px;
     }
-    
     .setting-item label {
       display: block;
       font-weight: bold;
       margin-bottom: 5px;
     }
-    
-    .setting-item input[type="email"],
-    .setting-item input[type="url"] {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      outline: none;
-    }
-    
-    .setting-item button {
+    button {
       padding: 10px 20px;
       font-size: 16px;
-      background-color: #4caf50;
-      color: #fff;
+      background-color: rgb(76, 175, 80);
+      color: rgb(255, 255, 255);
       border: none;
       border-radius: 4px;
       cursor: pointer;
     }
-    
     .text-center {
       text-align: center;
+    }
+    .c1814 {
+      width: 173.22222900390625px;
+      background-color: #70beb5;
+      height: 43px;
+    }
+    .c2235 {
+      padding: 10px;
     }
   </style>
 </head>
 <body>
   <div class="setting-container">
     <h1>设置页面</h1>
-    
     <div class="setting-item">
       <label for="clearCache">清除缓存</label>
       <button id="clearCache">清除</button>
     </div>
-    
     <div class="setting-item">
       <label>联系我</label>
       <button onclick="sendEmail()">点击联系</button>
     </div>
-
     <div class="setting-item">
-  <label>官网</label>
-  <button onclick="visitWebsite()">点击访问</button>
-</div>
-
-<div class="setting-item">
-  <label>用户手册</label>
-  <button onclick="viewUserManual()">点击查看</button>
-</div>
-
-    
-  
+      <label>官网</label>
+      <button onclick="visitWebsite()">点击访问</button>
+    </div>
+    <div class="setting-item">
+      <label>用户手册</label>
+      <button onclick="viewUserManual()">点击查看</button>
+    </div>
+    <div class="setting-item">
+      <label>旧版页面</label>
+      <button onclick="setOldPage()">点击切换</button>
+    </div>
+    <img src="https://woobx.cn/assets/img/icon/logo.png" alt="木函Logo" width="200" class="c1814"/>
+    <div id="ipety" class="c2235">感谢一个木函对本app制作的支持！</div>
+  </div>
+  <div class="text-center">
+    <a href="https://woobx.cn/" target="_blank"></a>
+  </div>
   <script>
     function sendEmail() {
       window.location.href = "mailto:youreln@qq.com?subject=咨询&body=你好，我有一些问题想要咨询。";
     }
-    
-    function saveSettings() {
-      // 获取输入框的值
-      var contactEmail = document.getElementById('contactEmail').value;
-      
-      // 执行保存设置的逻辑...
-      
-      alert('设置已保存');
+    function visitWebsite() {
+      window.open("https://woobx.cn/");
     }
-    
+    function viewUserManual() {
+      window.open("https://woobx.cn/2023/06/26/%E7%94%A8%E6%88%B7%E6%8C%87%E5%8D%97/");
+    }
+    function setOldPage() {
+      window.location.href = "app-h5.html";
+    }
     var clearCacheButton = document.getElementById('clearCache');
     clearCacheButton.addEventListener('click', function() {
       // 执行清除缓存的逻辑...
-      
       alert('缓存已清除');
     });
   </script>
-  <script>
-  function visitWebsite() {
-    window.open("https://youreln.gitee.io");
-  }
-  
-  function viewUserManual() {
-    window.open("https://youreln.gitee.io/2023/06/26/%E7%94%A8%E6%88%B7%E6%8C%87%E5%8D%97/");
-  }
-</script>
-
 </body>
 </html>
