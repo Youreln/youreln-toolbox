@@ -338,6 +338,16 @@ var _hmt = _hmt || [];
 </div>
             </div>
         </div>
+          <script>
+    if ('serviceWorker' in navigator) {
+      // 注册Service Worker
+      navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+        console.log('Service Worker 注册成功:', registration);
+      }).catch(function(error) {
+        console.log('Service Worker 注册失败:', error);
+      });
+    }
+  </script>
 <a href="设置.html" class="settings-button">
         <i class="fas fa-cog"></i>
         设置
