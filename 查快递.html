@@ -1,108 +1,171 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <title>查快递工具</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>快递查询工具</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-      text-align: center;
-    }
-
-    h1 {
-      color: #333;
     }
 
     .container {
-      width: 400px;
-      margin: 0 auto;
+      margin: 20px auto;
+      max-width: 600px;
       padding: 20px;
-      background-color: #fff;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      border: 1px solid #ccc;
+      background-color: #f5f5f5;
       border-radius: 5px;
     }
 
-    .input-container {
+    h1 {
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      justify-content: center;
       margin-bottom: 20px;
     }
 
-    .input-container input {
-      padding: 8px 12px;
+    input[type="text"] {
+      width: 300px;
+      padding: 10px;
       font-size: 16px;
-      width: 100%;
       border: 1px solid #ccc;
-      border-radius: 3px;
+      border-radius: 4px;
     }
 
-    .btn-container {
-      margin-top: 10px;
-    }
-
-    .btn-container button {
-      padding: 8px 20px;
+    input[type="submit"] {
+      padding: 10px 20px;
       font-size: 16px;
+      background-color: #4285f4;
       color: #fff;
-      background-color: #007bff;
       border: none;
-      border-radius: 3px;
+      border-radius: 4px;
       cursor: pointer;
     }
 
-    .result-container {
+    .result {
       margin-top: 20px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 4px;
+    }
+
+    .error-message {
+      color: #ff0000;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .success-message {
+      color: #008000;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
       text-align: left;
+      border-bottom: 1px solid #ccc;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>查快递工具</h1>
-    <div class="input-container">
-      <input type="text" id="companyCode" placeholder="请输入快递公司代号">
-      <input type="text" id="trackingNumber" placeholder="请输入快递单号">
-    </div>
-    <div class="btn-container">
-      <button onclick="trackPackage()">查快递</button>
-    </div>
-    <div id="trackingResult" class="result-container"></div>
+    <h1>快递查询工具</h1>
+
+    <form id="track-form">
+      <input type="text" id="tracking-number" placeholder="请输入快递号">
+      <input type="submit" value="查询">
+    </form>
+
+    <div id="result-container"></div>
   </div>
 
   <script>
-    function trackPackage() {
-      const companyCode = document.getElementById('companyCode').value.trim();
-      const trackingNumber = document.getElementById('trackingNumber').value.trim();
-      const trackingResult = document.getElementById('trackingResult');
+    var trackForm = document.getElementById('track-form');
+    var trackingNumberInput = document.getElementById('tracking-number');
+    var resultContainer = document.getElementById('result-container');
 
-      if (companyCode.length === 0 || trackingNumber.length === 0) {
-        alert("请先输入快递公司代号和快递单号");
+    trackForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var trackingNumber = trackingNumberInput.value.trim();
+
+      if (trackingNumber === '') {
+        showError('请输入快递号');
         return;
       }
 
-      const apiUrl = 'http://www.kuaidi100.com/query?type=' + encodeURIComponent(companyCode) + '&postid=' + encodeURIComponent(trackingNumber);
+      getResult(trackingNumber);
+    });
 
-      fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-          if (data.status === '200') {
-            const trackingInfo = data.data;
-
-            let html = '<h3>快递跟踪信息：</h3>';
-
-            for (let i = 0; i < trackingInfo.length; i++) {
-              html += '<p>' + trackingInfo[i].time + ' - ' + trackingInfo[i].context + '</p>';
-            }
-
-            trackingResult.innerHTML = html;
+    function getResult(trackingNumber) {
+      fetch('https://api.vvhan.com/api/kuaidi?hao=' + trackingNumber)
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(data) {
+          if (data.success) {
+            showSuccess(data);
           } else {
-            trackingResult.innerText = "获取快递信息失败，请重试";
+            showError('查询失败，请确认快递号是否正确');
           }
         })
-        .catch(error => {
-          trackingResult.innerText = "发生错误，请重试";
+        .catch(function(error) {
+          console.error(error);
+          showError('查询失败，请检查网络连接');
         });
+    }
 
-      document.getElementById('companyCode').value = ''; // 清空快递公司代号输入框
-      document.getElementById('trackingNumber').value = ''; // 清空快递单号输入框
+    function showSuccess(data) {
+      resultContainer.innerHTML = '';
+
+      var table = document.createElement('table');
+
+      var headerRow = document.createElement('tr');
+      var headerTime = document.createElement('th');
+      var headerContext = document.createElement('th');
+
+      headerTime.textContent = '时间';
+      headerContext.textContent = '状态';
+
+      headerRow.appendChild(headerTime);
+      headerRow.appendChild(headerContext);
+
+      table.appendChild(headerRow);
+
+      data.info.forEach(function(item) {
+        var row = document.createElement('tr');
+        var timeCell = document.createElement('td');
+        var contextCell = document.createElement('td');
+
+        timeCell.textContent = item.time;
+        contextCell.textContent = item.context;
+
+        row.appendChild(timeCell);
+        row.appendChild(contextCell);
+
+        table.appendChild(row);
+      });
+
+      resultContainer.appendChild(table);
+    }
+
+    function showError(message) {
+      resultContainer.innerHTML = '';
+      
+      var errorMessage = document.createElement('div');
+      errorMessage.classList.add('error-message');
+      errorMessage.textContent = message;
+      
+      resultContainer.appendChild(errorMessage);
     }
   </script>
 </body>
