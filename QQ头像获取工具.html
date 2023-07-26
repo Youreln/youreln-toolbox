@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>获取QQ头像昵称工具</title>
+</head>
+<body>
+    <h1>获取QQ头像昵称工具</h1>
+    <form id="qqForm">
+        <label for="qqInput">请输入QQ号：</label>
+        <input type="text" id="qqInput" name="qq">
+        <button type="submit">获取</button>
+    </form>
+    <div id="resultContainer"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var form = document.getElementById("qqForm");
+            var resultContainer = document.getElementById("resultContainer");
+
+            form.addEventListener("submit", function(event) {
+                event.preventDefault(); // 阻止表单提交的默认行为
+
+                var qqInput = document.getElementById("qqInput");
+                var qq = qqInput.value.trim();
+
+                // 如果输入框为空，则清空结果容器并返回
+                if (qq === "") {
+                    resultContainer.innerHTML = "";
+                    return;
+                }
+
+                // 创建请求URL
+                var apiUrl = "https://api.vvhan.com/api/qq?qq=" + qq;
+
+                // 发送GET请求
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", apiUrl);
+                xhr.onreadystatechange = function() {
+                    if(xhr.readyState === 4 && xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        var nickname = response.name;
+                        var avatarUrl = response.imgurl;
+
+                        // 清空结果容器
+                        resultContainer.innerHTML = "";
+
+                        // 创建图片元素
+                        var image = document.createElement("img");
+                        image.src = avatarUrl;
+                        image.alt = "QQ头像";
+
+                        // 创建昵称元素
+                        var nicknameElement = document.createElement("p");
+                        nicknameElement.textContent = "昵称：" + nickname;
+
+                        // 将图片和昵称添加到结果容器中
+                        resultContainer.appendChild(image);
+                        resultContainer.appendChild(nicknameElement);
+                    } else {
+                        console.log("获取信息失败，请稍后重试。");
+                    }
+                };
+                xhr.send();
+            });
+        });
+    </script>
+</body>
+</html>
