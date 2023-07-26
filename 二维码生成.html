@@ -1,70 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <style>
-    .container {
-      text-align: center;
-      padding: 20px;
-    }
-
-    h1 {
-      color: #333;
-    }
-
-    .input-container {
-      margin-bottom: 20px;
-    }
-
-    label {
-      font-weight: bold;
-    }
-
-    input[type="text"] {
-      padding: 5px;
-      width: 200px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    button {
-      padding: 5px 10px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    #qrcode-container {
-      margin-top: 20px;
-    }
-  </style>
-  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script>
-    function generateQRCode() {
-      var text = document.getElementById("text").value;
-      var apiUrl = "https://api.vvhan.com/api/qr?text=" + encodeURIComponent(text);
-      
-      $.get(apiUrl, function(data) {
-        var imgElement = document.createElement('img');
-        imgElement.src = data;
-        
-        var qrCodeContainer = document.getElementById("qrcode-container");
-        qrCodeContainer.innerHTML = '';
-        qrCodeContainer.appendChild(imgElement);
-      });
-    }
-  </script>
+    <title>二维码生成工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+        h1 {
+            color: #00bfa5;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type="text"] {
+            width: 300px;
+            height: 30px;
+            font-size: 16px;
+            padding: 5px;
+        }
+        button[type="submit"] {
+            background-color: #00bfa5;
+            color: #fff;
+            font-weight: bold;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        img {
+            max-width: 300px;
+            height: auto;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>二维码生成器</h1>
-    <div class="input-container">
-      <label for="text">文本内容：</label>
-      <input type="text" id="text" placeholder="请输入内容">
-      <button onclick="generateQRCode()">生成二维码</button>
-    </div>
-    <div id="qrcode-container"></div>
-  </div>
+    <h1>二维码生成工具</h1>
+    <form id="qrcodeForm">
+        <input type="text" id="inputText" placeholder="请输入文本">
+        <button type="submit">生成二维码</button>
+    </form>
+
+    <div id="qrcodeContainer"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var form = document.getElementById("qrcodeForm");
+            var inputText = document.getElementById("inputText");
+            var qrcodeContainer = document.getElementById("qrcodeContainer");
+
+            form.addEventListener("submit", function(event) {
+                event.preventDefault(); // 阻止表单提交的默认行为
+
+                var text = inputText.value.trim();
+
+                // 如果输入框为空，则清空结果并返回
+                if (text === "") {
+                    qrcodeContainer.innerHTML = "";
+                    return;
+                }
+
+                // 创建二维码图片URL
+                var imageUrl = "https://api.axtn.net/api/textqrcode?text=" + encodeURIComponent(text);
+
+                // 渲染二维码图片
+                var imgElement = document.createElement("img");
+                imgElement.src = imageUrl;
+                imgElement.alt = "二维码";
+                qrcodeContainer.innerHTML = "";
+                qrcodeContainer.appendChild(imgElement);
+            });
+        });
+    </script>
 </body>
 </html>
