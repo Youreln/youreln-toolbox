@@ -96,6 +96,15 @@
         // 点到地雷，游戏结束
         cell.innerHTML = '&#128163;';
         alert('你输了！游戏结束。');
+
+        // 停止计时器
+        stopTimer();
+        
+        // 禁用所有格子的点击事件
+        let cells = document.getElementsByClassName('cell');
+        for (let i = 0; i < cells.length; i++) {
+          cells[i].removeEventListener('click', onCellClick);
+        }
       } else {
         cell.innerHTML = gameBoard[x][y].value;
         cell.style.backgroundColor = '#ddd';
@@ -132,6 +141,15 @@
       }
       if (win) {
         alert('恭喜！你赢了！');
+
+        // 停止计时器
+        stopTimer();
+        
+        // 禁用所有格子的点击事件
+        let cells = document.getElementsByClassName('cell');
+        for (let i = 0; i < cells.length; i++) {
+          cells[i].removeEventListener('click', onCellClick);
+        }
       }
 
       // 更新分数
@@ -183,7 +201,7 @@
           cell.classList.add('cell');
           cell.setAttribute('data-x', i);
           cell.setAttribute('data-y', j);
-          cell.addEventListener('click', function() { revealCell(cell); });
+          cell.addEventListener('click', onCellClick);
           row.appendChild(cell);
         }
         table.appendChild(row);
@@ -201,6 +219,10 @@
 
       // 启动计时器
       startTimer();
+    }
+
+    function onCellClick() {
+      revealCell(this);
     }
 
     initGame();
