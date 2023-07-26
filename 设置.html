@@ -1,108 +1,121 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-	<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?83ffde2d593928c85cc6bfffcf0e7278";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>设置 - Youreln工具箱</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-</head>
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>设置</title>
+  <style>
     body {
-        font-family: "黑体", Arial, sans-serif;
-        background-color: #f1f8e9;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 20px;
     }
     
-    header {
-        text-align: center;
-        padding: 10px 0;
-        background-color: #ffffff;
-        position: sticky;
-        top: 0;
-        z-index: 999;
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
     }
     
-    .navbar {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        padding-right: 20px;
-    }
-
-    .title {
-        font-size: 20px;
-        font-weight: bold;
+    .setting-container {
+      max-width: 500px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
     
-    .settings-link {
-        color: #333;
-        text-decoration: none;
-        font-size: 16px;
+    .setting-item {
+      margin-bottom: 20px;
     }
-
-    .main-content {
-        margin: 20px;
-        text-align: center;
+    
+    .setting-item label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
     }
-
-    .button {
-        display: inline-block;
-        background-color: #4285f4;
-        color: #fff;
-        font-size: 16px;
-        padding: 10px 20px;
-        border-radius: 5px;
-        text-decoration: none;
-        margin-bottom: 10px;
+    
+    .setting-item input[type="email"],
+    .setting-item input[type="url"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      outline: none;
     }
-
-    .link-button {
-        text-decoration: none;
-        color: #fff;
+    
+    .setting-item button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
     }
-</style>
+    
+    .text-center {
+      text-align: center;
+    }
+  </style>
+</head>
 <body>
-    <header>
-        <div class="navbar">
-            <a class="settings-link" href="app1.0.html">返回</a>
-        </div>
-    </header>
-    <div class="main-content">
-        <h1>设置</h1>
-        <p>请选择以下操作：</p>
-        <a class="button" href="#" onclick="clearCache()">清除缓存</a><br>
-        <a class="button" href="#" onclick="openContact()">联系我们</a><br>
-        <a class="button" href="https://youreln.gitee.io/" onclick="openWebsite()">官网</a>
+  <div class="setting-container">
+    <h1>设置页面</h1>
+    
+    <div class="setting-item">
+      <label for="clearCache">清除缓存</label>
+      <button id="clearCache">清除</button>
+    </div>
+    
+    <div class="setting-item">
+      <label>联系我</label>
+      <button onclick="sendEmail()">点击联系</button>
     </div>
 
-    <script>
-        function clearCache() {
-            // 清除缓存的代码
-            alert("缓存已清除！");
-        }
+    <div class="setting-item">
+  <label>官网</label>
+  <button onclick="visitWebsite()">点击访问</button>
+</div>
 
-        function openContact() {
-            window.location.href = "mailto:Youreln@qq.com";
-        }
+<div class="setting-item">
+  <label>用户手册</label>
+  <button onclick="viewUserManual()">点击查看</button>
+</div>
 
-        function openWebsite() {
-            window.open("https://youreln.gitee.io/");
-        }
-    </script>
+    
+  
+  <script>
+    function sendEmail() {
+      window.location.href = "mailto:youreln@qq.com?subject=咨询&body=你好，我有一些问题想要咨询。";
+    }
+    
+    function saveSettings() {
+      // 获取输入框的值
+      var contactEmail = document.getElementById('contactEmail').value;
+      
+      // 执行保存设置的逻辑...
+      
+      alert('设置已保存');
+    }
+    
+    var clearCacheButton = document.getElementById('clearCache');
+    clearCacheButton.addEventListener('click', function() {
+      // 执行清除缓存的逻辑...
+      
+      alert('缓存已清除');
+    });
+  </script>
+  <script>
+  function visitWebsite() {
+    window.open("https://youreln.gitee.io");
+  }
+  
+  function viewUserManual() {
+    window.open("https://youreln.gitee.io/2023/06/26/%E7%94%A8%E6%88%B7%E6%8C%87%E5%8D%97/");
+  }
+</script>
+
 </body>
 </html>
