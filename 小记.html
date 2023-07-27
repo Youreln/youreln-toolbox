@@ -1,182 +1,122 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>小记本</title>
+    <title>小记</title>
     <style>
+        /* CSS样式 */
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 30px;
         }
-
         h1 {
             text-align: center;
         }
-
-        .note-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        p {
             margin-bottom: 10px;
         }
-
-        .note-input {
-            flex-grow: 1;
-            margin-right: 10px;
+        textarea {
+            width: 100%;
+            height: 100px;
             padding: 5px;
+            border-radius: 5px;
             border: 1px solid #ccc;
-            border-radius: 4px;
         }
-
-        .note-buttons {
-            display: flex;
-        }
-
-        .note-buttons button {
-            margin-left: 5px;
-            padding: 5px 10px;
+        button {
+            padding: 8px 16px;
             background-color: #4caf50;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
         }
-
-        .note-list {
-            list-style-type: none;
+        button:hover {
+            background-color: #45a049;
+        }
+        ul {
+            list-style: none;
             padding: 0;
+            margin: 0;
         }
-
-        .note-list li {
-            margin-bottom: 5px;
-            display: flex;
-            justify-content: space-between;
+        .noteItem {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
         }
-
-        .note-list li button {
-            margin-left: 5px;
+        .noteItem p {
+            margin: 0;
         }
-
-        .download-link {
-            margin-top: 10px;
-            display: block;
-            text-align: center;
+        .noteItem button {
+            float: right;
+            background-color: #f44336;
+        }
+        .noteItem button:hover {
+            background-color: #d32f2f;
         }
     </style>
-    <script>
-        // 将小记存储到本地存储
-        function saveNote() {
-            var noteInput = document.getElementById("note-input");
-            var note = noteInput.value.trim();
-
-            if (note) {
-                var notes = localStorage.getItem("notes");
-
-                if (notes) {
-                    notes = JSON.parse(notes);
-                } else {
-                    notes = [];
-                }
-
-                notes.push(note);
-                localStorage.setItem("notes", JSON.stringify(notes));
-
-                // 清空输入框
-                noteInput.value = "";
-
-                // 更新小记列表
-                loadNotes();
-            }
-        }
-
-        // 从本地存储加载小记列表
-        function loadNotes() {
-            var notes = localStorage.getItem("notes");
-            var noteList = document.getElementById("note-list");
-
-            if (notes) {
-                notes = JSON.parse(notes);
-
-                // 清空小记列表
-                noteList.innerHTML = "";
-
-                // 逐个添加小记
-                for (var i = 0; i < notes.length; i++) {
-                    var noteItem = document.createElement("li");
-                    noteItem.textContent = notes[i];
-
-                    var deleteButton = document.createElement("button");
-                    deleteButton.textContent = "删除";
-                    deleteButton.onclick = (function(index) {
-                        return function() {
-                            deleteNote(index);
-                        }
-                    })(i);
-
-                    var shareButton = document.createElement("button");
-                    shareButton.textContent = "分享";
-                    shareButton.onclick = (function(note) {
-                        return function() {
-                            shareNote(note);
-                        }
-                    })(notes[i]);
-
-                    noteItem.appendChild(deleteButton);
-                    noteItem.appendChild(shareButton);
-                    noteList.appendChild(noteItem);
-                }
-            }
-        }
-
-        // 删除小记
-        function deleteNote(index) {
-            var notes = localStorage.getItem("notes");
-
-            if (notes) {
-                notes = JSON.parse(notes);
-                notes.splice(index, 1);
-                localStorage.setItem("notes", JSON.stringify(notes));
-
-                // 更新小记列表
-                loadNotes();
-            }
-        }
-
-        // 分享小记
-        function shareNote(note) {
-            var shareMethod = alert("长按选择内容进行分享");
-
-        // 将小记保存为txt文件并下载
-        function downloadNotes() {
-            var notes = localStorage.getItem("notes");
-            if (notes) {
-                notes = JSON.parse(notes);
-
-                var content = "";
-                for (var i = 0; i < notes.length; i++) {
-                    content += notes[i] + "\n";
-                }
-
-                var blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-                saveAs(blob, "notes.txt");
-            }
-        }
-
-        // 页面加载完成后自动加载小记列表
-        window.onload = function() {
-            loadNotes();
-        };
-    </script>
 </head>
 <body>
-    <h1>小记本</h1>
+    <h1>小记</h1>
+    <p>输入笔记内容（长按选择内容可以分享）:</p>
+    <textarea id="noteInput"></textarea>
+    <br><br>
+    <button id="addNoteBtn">添加笔记</button>
+    <br><br>
+    <ul id="notesList"></ul>
 
-    <div class="note-container">
-        <input type="text" id="note-input" class="note-input" placeholder="输入您的小记">
-        <div class="note-buttons">
-            <button onclick="saveNote()">保存</button>
-        </div>
-    </div>
+    <script>
+        // JavaScript代码
+        const noteInput = document.getElementById('noteInput');
+        const addNoteBtn = document.getElementById('addNoteBtn');
+        const notesList = document.getElementById('notesList');
 
-    <ul id="note-list" class="note-list"></ul>
+        let notes = [];
+
+        // 加载笔记数据
+        function loadNotes() {
+            const notesStr = localStorage.getItem('notes');
+            if (notesStr) {
+                notes = JSON.parse(notesStr);
+                for (const note of notes) {
+                    addNoteToList(note);
+                }
+            }
+        }
+
+        // 保存笔记数据
+        function saveNotes() {
+            localStorage.setItem('notes', JSON.stringify(notes));
+        }
+
+        // 添加笔记到列表中
+        function addNoteToList(note) {
+            const noteItem = document.createElement('li');
+            noteItem.className = 'noteItem';
+            noteItem.innerHTML = `
+                <p>${note}</p>
+                <button>删除</button>
+            `;
+            noteItem.querySelector('button').addEventListener('click', function() {
+                notesList.removeChild(noteItem);
+                notes.splice(notes.indexOf(note), 1);
+                saveNotes();
+            });
+            notesList.appendChild(noteItem);
+        }
+
+        // 监听按钮点击事件
+        addNoteBtn.addEventListener('click', function() {
+            const note = noteInput.value.trim();
+            if (note) {
+                notes.push(note);
+                addNoteToList(note);
+                saveNotes();
+                noteInput.value = '';
+            }
+        });
+
+        // 初始化应用
+        loadNotes();
+    </script>
 </body>
 </html>
