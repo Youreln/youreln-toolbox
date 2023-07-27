@@ -1,311 +1,126 @@
-<!DOCTYPE html>
-<html>
-	<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?83ffde2d593928c85cc6bfffcf0e7278";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
-
-<head>
-    <meta charset="UTF-8">
-    <style>
-        canvas {
-            border: 1px solid black;
-        }
-    </style>
-</head>
-<body>
-    <h1>短煊函数图像绘制工具</h1>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <style>
-        .info-box {
-            background-color: #f0f0f0;
-            border: 2px solid #cccccc;
-            padding: 20px;
-            text-align: center;
-            max-width: 1000px;
-            margin: 0 auto;
-            margin-top: 50px;
-            border-radius: 5px;
-        }
-
-        .info-box h2 {
-            color: #333333;
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-
-        .info-box p {
-            color: #555555;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-
-        .button {
-            display: inline-block;
-            background-color: #007bff;
-            color: #ffffff;
-            padding: 10px 20px;
-            font-size: 14px;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-    </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 </head>
 <body>
-    <div class="info-box">
-        <h2>注意！</h2>
-        <p>在手机端请点击表达式模式按钮后才能开始手绘，电脑不需要。线条会反着来</p>
-    <div>
-        <button onclick="changeMode()">手绘模式</button>
-        <button onclick="changeMode()">表达式模式</button>
-    </div>
-
-    <div id="expression-draw-options" style="display:none;">
-        <label for="function-type">函数类型:</label>
-        <select id="function-type">
-            <option value="linear">线性函数</option>
-            <option value="quadratic">二次函数</option>
-            <option value="cubic">三次函数</option>
-            <option value="logarithmic">对数函数</option>
-        </select>
-
-        <label for="expression">函数表达式:</label>
-        <input type="text" id="expression">
-
-        <button onclick="addExpression()">添加</button>
-        <button onclick="drawExpressions()">绘制</button>
-    </div>
-
-    <div>
-        <button onclick="clearCanvas()">清空</button>
-        <button onclick="saveCanvas()">保存</button>
-    </div>
-
-    <canvas id="canvas" width="800" height="400"></canvas>
-    <div id="coordinates"></div>
-    <ul id="expression-list"></ul>
-
-    <script>
-        var canvas = document.getElementById('canvas');
-        var context = canvas.getContext('2d');
-        var expressionDrawOptions = document.getElementById('expression-draw-options');
-        var functionTypeSelect = document.getElementById('function-type');
-        var expressions = [];
-
-        var isDrawing = false;
-
-        // 设置默认的显示选项
-        expressionDrawOptions.style.display = 'none';
-
-        // 当模式选择发生变化时，更新显示选项
-        function changeMode() {
-            var expressionButton = document.getElementById('expression-draw-options');
-            var selectedMode = event.target.innerText === '手绘模式' ? 'hand' : 'expression';
-            
-            if (selectedMode === 'hand') {
-                expressionDrawOptions.style.display = 'none';
-                canvas.removeEventListener('touchstart', startDrawing);
-                canvas.removeEventListener('touchmove', draw);
-                canvas.removeEventListener('touchend', stopDrawing);
-            } else if (selectedMode === 'expression') {
-                expressionDrawOptions.style.display = 'block';
-                canvas.addEventListener('touchstart', startDrawing);
-                canvas.addEventListener('touchmove', draw);
-                canvas.addEventListener('touchend', stopDrawing);
+  <div id="container" style="width: 800px; height: 600px;">
+    <canvas id="myChart"></canvas>
+  </div>
+  <div id="controls">
+    <p>请选择函数类型：</p>
+    <select id="functionType" onchange="drawFunction()">
+      <option value="linear">线性函数</option>
+      <option value="quadratic">二次函数</option>
+      <option value="sinusoidal">正弦函数</option>
+    </select>
+    <p>请输入函数表达式（使用x作为变量）：</p>
+    <input type="text" id="functionExpression" value="y = x + 1" onchange="drawFunction()">
+    <p>请选择颜色：</p>
+    <input type="color" id="functionColor" value="#ff0000" onchange="drawFunction()">
+    <button id="clearButton" onclick="clearFunction()">清空</button>
+    <button id="saveButton" onclick="saveFunction()">生成图片</button>
+  </div>
+  <script>
+    // 获取画布元素
+    var canvas = document.getElementById("myChart");
+    // 获取画布上下文
+    var ctx = canvas.getContext("2d");
+    // 创建一个新的Chart对象
+    var myChart = new Chart(ctx, {
+      type: "scatter", // 设置图表类型为散点图
+      data: {
+        datasets: [] // 设置数据集为空数组
+      },
+      options: {
+        scales: {
+          xAxes: [{ // 设置x轴的属性
+            type: "linear", // 设置x轴为线性刻度
+            position: "bottom", // 设置x轴在底部
+            scaleLabel: { // 设置x轴的标签
+              display: true, // 显示标签
+              labelString: "x" // 标签内容为"x"
             }
-        }
-
-        // 清空画布
-        function clearCanvas() {
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            updateCoordinates('');
-            expressions = [];
-            updateExpressionList();
-        }
-
-        // 保存画布
-        function saveCanvas() {
-            var dataURL = canvas.toDataURL();
-            var link = document.createElement('a');
-            link.href = dataURL;
-            link.download = 'canvas.png';
-            link.click();
-        }
-
-        // 添加表达式
-        function addExpression() {
-            var expressionInput = document.getElementById('expression');
-            var expression = expressionInput.value;
-            expressions.push(expression);
-            expressionInput.value = '';
-            updateExpressionList();
-        }
-
-        // 更新函数表达式列表
-        function updateExpressionList() {
-            var expressionList = document.getElementById('expression-list');
-            expressionList.innerHTML = ''; // 清空列表
-
-            for (var i = 0; i < expressions.length; i++) {
-                var expression = expressions[i];
-                var li = document.createElement('li');
-                li.innerText = expression;
-                expressionList.appendChild(li);
+          }],
+          yAxes: [{ // 设置y轴的属性
+            type: "linear", // 设置y轴为线性刻度
+            position: "left", // 设置y轴在左侧
+            scaleLabel: { // 设置y轴的标签
+              display: true, // 显示标签
+              labelString: "y" // 标签内容为"y"
             }
+          }]
+        },
+        legend: { // 设置图例的属性
+          display: true, // 显示图例
+          position: "top", // 设置图例在顶部
+          labels: { // 设置图例标签的属性
+            fontSize: 16, // 设置字体大小为16像素
+            fontColor: "#000000" // 设置字体颜色为黑色
+          }
+        },
+        title: { // 设置标题的属性
+          display: true, // 显示标题
+          text: "短煊函数图像绘制工具", // 设置标题内容
+          fontSize: 24, // 设置字体大小为24像素
+          fontColor: "#000000" // 设置字体颜色为黑色
         }
+      }
+    });
 
-        // 绘制所有表达式图像
-        function drawExpressions() {
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            drawCoordinateSystem();
-
-            for (var i = 0; i < expressions.length; i++) {
-                var expression = expressions[i];
-                var func = createFunction(expression);
-                var functionType = functionTypeSelect.value;
-
-                context.beginPath();
-                context.strokeStyle = getRandomColor();
-
-                for (var x = 0; x <= canvas.width; x++) {
-                    var y = calculateFunctionValue(functionType, func, x);
-                    context.lineTo(x, canvas.height - y); // 不需要坐标翻转
-                }
-
-                context.stroke();
-                updateCoordinates(`当前函数表达式: ${expression}`);
-            }
+    // 定义一个函数，用于根据函数类型和表达式生成数据点
+    function generateDataPoints(functionType, functionExpression) {
+      var dataPoints = []; // 创建一个空数组，用于存储数据点
+      var xMin = -10; // 设置x轴的最小值为-10
+      var xMax = 10; // 设置x轴的最大值为10
+      var xStep = 0.1; // 设置x轴的步长为0.1
+      for (var x = xMin; x <= xMax; x += xStep) { // 遍历x轴的每个值
+        var y = 0; // 初始化y轴的值为0
+        if (functionType == "linear") { // 如果函数类型为线性函数
+          y = eval(functionExpression.replace("x", x)); // 用eval函数计算表达式的值，替换x为当前的x值
+        } else if (functionType == "quadratic") { // 如果函数类型为二次函数
+          y = eval(functionExpression.replace("x", x * x)); // 用eval函数计算表达式的值，替换x为当前的x的平方
+        } else if (functionType == "sinusoidal") { // 如果函数类型为正弦函数
+          y = eval(functionExpression.replace("x", Math.sin(x))); // 用eval函数计算表达式的值，替换x为当前的x的正弦值
         }
+        dataPoints.push({x: x, y: y}); // 将当前的数据点添加到数组中
+      }
+      return dataPoints; // 返回数据点数组
+    }
 
-        // 创建函数对象
-        function createFunction(expression) {
-            return new Function('x', 'return ' + expression);
-        }
+    // 定义一个函数，用于绘制函数图像
+    function drawFunction() {
+      var functionType = document.getElementById("functionType").value; // 获取用户选择的函数类型
+      var functionExpression = document.getElementById("functionExpression").value; // 获取用户输入的函数表达式
+      var functionColor = document.getElementById("functionColor").value; // 获取用户选择的颜色
+      var dataPoints = generateDataPoints(functionType, functionExpression); // 调用generateDataPoints函数，生成数据点数组
+      myChart.data.datasets.push({ // 向图表中添加一个新的数据集
+        label: functionExpression, // 设置数据集的标签为函数表达式
+        data: dataPoints, // 设置数据集的数据为数据点数组
+        borderColor: functionColor, // 设置数据集的边框颜色为用户选择的颜色
+        backgroundColor: "rgba(0,0,0,0)", // 设置数据集的背景颜色为透明色
+        showLine: true, // 设置显示线条
+        fill: false, // 设置不填充区域
+        pointRadius: 0, // 设置数据点的半径为0，即不显示数据点
+      });
+      myChart.update(); // 更新图表显示效果
+    }
 
-        // 计算函数值
-        function calculateFunctionValue(functionType, func, x) {
-            if (functionType === 'linear') {
-                return func(x);
-            } else if (functionType === 'quadratic') {
-                return Math.pow(func(x), 2);
-            } else if (functionType === 'cubic') {
-                return Math.pow(func(x), 3);
-            } else if (functionType === 'logarithmic') {
-                return Math.log(func(x));
-            }
-        }
+    // 定义一个函数，用于清空函数图像
+    function clearFunction() {
+      myChart.data.datasets = []; // 将图表中的数据集设置为空数组，即清空所有数据集
+      myChart.update(); // 更新图表显示效果
+    }
 
-        // 绘制坐标系
-        function drawCoordinateSystem() {
-            var xAxisMargin = 40;
-            var yAxisMargin = 20;
-
-            // 绘制 x 轴
-            context.beginPath();
-            context.moveTo(0, canvas.height - yAxisMargin);
-            context.lineTo(canvas.width, canvas.height - yAxisMargin);
-            context.stroke();
-
-            // 绘制 y 轴
-            context.beginPath();
-            context.moveTo(xAxisMargin, 0);
-            context.lineTo(xAxisMargin, canvas.height);
-            context.stroke();
-        }
-
-        // 更新坐标信息
-        function updateCoordinates(text) {
-            var coordinates = document.getElementById('coordinates');
-            coordinates.innerText = text;
-        }
-
-        // 触摸开始
-        function startDrawing(event) {
-            event.preventDefault();
-
-            var rect = canvas.getBoundingClientRect();
-            var touch = event.touches[0];
-            var x = touch.clientX - rect.left;
-            var y = canvas.height - (touch.clientY - rect.top);
-
-            context.beginPath();
-            context.moveTo(x, y);
-            isDrawing = true;
-        }
-
-        // 触摸移动
-        function draw(event) {
-            event.preventDefault();
-
-            if (isDrawing) {
-                var rect = canvas.getBoundingClientRect();
-                var touch = event.touches[0];
-                var x = touch.clientX - rect.left;
-                var y = canvas.height - (touch.clientY - rect.top);
-
-                context.lineTo(x, y);
-                context.stroke();
-            }
-        }
-
-        // 触摸结束
-        function stopDrawing(event) {
-            event.preventDefault();
-
-            isDrawing = false;
-        }
-
-        // 获取随机颜色
-        function getRandomColor() {
-            var letters = '0123456789ABCDEF';
-            var color = '#';
-            for (var i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }
-
-        // 监听鼠标移动事件
-        canvas.addEventListener('mousemove', function(e) {
-            var rect = canvas.getBoundingClientRect();
-            var x = e.clientX - rect.left;
-            var y = canvas.height - (e.clientY - rect.top);
-            updateCoordinates(`当前坐标: (${x}, ${y})`);
-        });
-
-        // 开始绘图
-        canvas.addEventListener('mousedown', function(event) {
-            context.beginPath();
-            var rect = canvas.getBoundingClientRect();
-            var x = event.clientX - rect.left;
-            var y = canvas.height - (event.clientY - rect.top);
-            context.moveTo(x, y);
-
-            isDrawing = true;
-        });
-
-        // 绘制路径
-        canvas.addEventListener('mousemove', function(event) {
-            if (isDrawing) {
-                var rect = canvas.getBoundingClientRect();
-                var x = event.clientX - rect.left;
-                var y = canvas.height - (event.clientY - rect.top);
-                context.lineTo(x, y);
-                context.stroke();
-            }
-        });
-
-        // 停止绘图
-        canvas.addEventListener('mouseup', function() {
-            isDrawing = false;
-        });
-    </script>
+    // 定义一个函数，用于生成图片并在下方显示
+    function saveFunction() {
+      var image = canvas.toDataURL("image/png"); // 调用canvas元素的toDataURL方法，将画布内容转换为图片格式，并返回图片的URL地址
+      var imageElement = document.createElement("img"); // 创建一个新的img元素，用于显示图片内容
+      imageElement.src = image; // 将img元素的src属性设置为图片的URL地址，即显示图片内容
+      document.body.appendChild(imageElement); // 将img元素添加到文档中，即在下方显示图片内容 
+    }
+  </script>
 </body>
+<div class="alert" role="alert">
+            注意：点击函数选项可以隐藏此函数图像！
+        </div>
 </html>
