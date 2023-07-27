@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>笔记应用</title>
+    <script src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-area {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .form-area label {
+            display: block;
+            margin-bottom: 10px;
+            text-align: left;
+            font-weight: bold;
+        }
+        .form-area input[type="password"], .form-area textarea {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 3px;
+        }
+        .form-area button {
+            padding: 6px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .result-area {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .result-area p {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>笔记应用</h1>
+        <div class="form-area">
+            <label for="note">笔记内容：</label>
+            <textarea id="note" placeholder="在此处输入笔记..."></textarea>
+            <label for="password">设置访问密码（可选）：</label>
+            <input type="password" id="password" placeholder="在此处输入访问密码...">
+            <button onclick="saveNote()">保存笔记</button>
+        </div>
+        <div class="result-area">
+            <p id="savedMessage"></p>
+            <label for="accessPassword">输入访问密码：</label>
+            <input type="password" id="accessPassword" placeholder="在此处输入访问密码...">
+            <button onclick="loadNote()">查看笔记</button>
+            <p id="loadedNote"></p>
+        </div>
+    </div>
+
+    <script>
+AV.init({
+    appId: 'tSvFkeR3miHqu23420fymLQw-gzGzoHsz',
+    appKey: '5u3smD0GTER5zfZV6dAKmG9I',
+    serverURL: 'https://tsvfker3.lc-cn-n1-shared.com'
+});
+
+
+        function saveNote() {
+            const Note = AV.Object.extend('Note');
+            const note = new Note();
+
+            const noteText = document.getElementById('note').value;
+            const password = document.getElementById('password').value;
+
+            note.set('content', noteText);
+            note.set('password', password);
+
+            note.save().then(function() {
+                document.getElementById('savedMessage').textContent = '笔记已保存成功！';
+            }).catch(function(error) {
+                document.getElementById('savedMessage').textContent = '保存失败：' + error.message;
+            });
+        }
+
+        function loadNote() {
+            const accessPassword = document.getElementById('accessPassword').value;
+
+            const query = new AV.Query('Note');
+            query.equalTo('password', accessPassword);
+            query.first().then(function(note) {
+                if (note) {
+                    const noteContent = note.get('content');
+                    document.getElementById('loadedNote').textContent = '笔记内容：\n' + noteContent;
+                } else {
+                    document.getElementById('loadedNote').textContent = '密码错误或未找到对应的笔记。';
+                }
+            }).catch(function(error) {
+                document.getElementById('loadedNote').textContent = '加载失败：' + error.message;
+            });
+        }
+    </script>
+</body>
+</html>
