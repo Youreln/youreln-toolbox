@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IP天气签名档</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+        h1 {
+            color: #00bfa5;
+        }
+        img {
+            max-width: 500px;
+            height: auto;
+            margin-top: 20px;
+        }
+        .save-instruction {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <h1>IP天气签名档</h1>
+
+    <div id="signatureContainer"></div>
+
+    <div class="save-instruction">请长按下方图片保存</div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var signatureContainer = document.getElementById("signatureContainer");
+
+            // 创建签名档图片URL
+            var imageUrl = "https://api.vvhan.com/api/ip";
+
+            // 渲染签名档图片
+            var imgElement = document.createElement("img");
+            imgElement.src = imageUrl;
+            imgElement.alt = "IP天气签名档";
+            signatureContainer.innerHTML = "";
+            signatureContainer.appendChild(imgElement);
+        });
+    </script>
+</body>
+</html>
