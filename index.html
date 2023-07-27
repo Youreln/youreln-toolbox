@@ -40,11 +40,11 @@
         // 检测设备类型并进行跳转
         function detectDeviceAndRedirect() {
             if (isMobile()) {
-                var choice = confirm("您正在使用移动设备，是否打开网页版？\n点击【确定】将跳转至网页版，点击【取消】将进行安卓版下载。");
+                var choice = confirm("移动设备网页版已经放缓更新，推荐下载app以体验最新功能\n点击【确定】将跳转至网页版，点击【取消】将进行安卓版下载。");
                 if (choice) {
                     window.location.href = 'app-h5.html';
                 } else {
-                    window.location.href = 'https://gitee.com/Youreln/youreln-toolbox/releases/download/v2.0.8/Youreln%E5%B7%A5%E5%85%B7%E7%AE%B1_2.0.8_release.apk';
+                    window.location.href = 'https://gitee.com/Youreln/youreln-toolbox/releases';
                 }
             } else {
                 window.location.href = 'pc.html';
