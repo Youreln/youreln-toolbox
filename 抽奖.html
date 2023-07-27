@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>抽奖工具</title>
+    <style>
+        /* 在这里添加CSS样式 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .wheel {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        .wheel:before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            background-color: #ff7675;
+            border-radius: 50%;
+        }
+        .pointer {
+            position: absolute;
+            top: calc(50% - 5px);
+            left: -5px;
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+            transform-origin: 50% 50%;
+        }
+        .spin-btn {
+            display: block;
+            width: 160px;
+            margin: 40px auto 0;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .prize-list {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .prize-list li {
+            display: inline-block;
+            margin: 0 10px;
+            font-size: 14px;
+            color: #666666;
+        }
+        .customize-area {
+            margin-top: 40px;
+        }
+        .customize-form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .customize-form input[type="text"],
+        .customize-form input[type="number"] {
+            height: 28px;
+            padding: 5px;
+            margin-right: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 3px;
+        }
+        .customize-form button {
+            padding: 6px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>抽奖工具</h1>
+        <div class="wheel"></div>
+        <div class="pointer"></div>
+        <button class="spin-btn">开始抽奖</button>
+        <ul class="prize-list"></ul>
+        <div class="customize-area">
+            <h2>自定义奖品和中奖概率</h2>
+            <div class="customize-form">
+                <input type="text" id="prizeName" placeholder="奖品名称">
+                <input type="number" id="probability" step="0.01" placeholder="中奖概率 (0-1)">
+                <button id="addPrizeBtn">添加奖品</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const spinBtn = document.querySelector('.spin-btn');
+        const wheel = document.querySelector('.wheel');
+        const pointer = document.querySelector('.pointer');
+        const prizeList = document.querySelector('.prize-list');
+        const addPrizeBtn = document.querySelector('#addPrizeBtn');
+        const prizeNameInput = document.querySelector('#prizeName');
+        const probabilityInput = document.querySelector('#probability');
+        let prizes = [];
+
+        function createWheel() {
+            const colors = [
+                '#ff7675',
+                '#0984e3',
+                '#6c5ce7',
+                '#fdcb6e',
+                '#00cec9',
+                '#55efc4',
+                '#fab1a0',
+                '#d63031',
+                '#192a56',
+                '#00b894'
+            ];
+
+            wheel.innerHTML = '';
+
+            let startAngle = 0;
+            for (let i = 0; i < prizes.length; i++) {
+                const prize = prizes[i];
+                const sliceAngle = 360 * prize.probability;
+                const endAngle = startAngle + sliceAngle;
+
+                const slice = document.createElement('div');
+                slice.classList.add('slice');
+                slice.style.transform = `rotate(${startAngle}deg)`;
+                slice.style.background = colors[i % colors.length];
+
+                const text = document.createElement('div');
+                text.classList.add('text');
+                text.innerHTML = prize.name;
+
+                slice.appendChild(text);
+                wheel.appendChild(slice);
+
+                startAngle = endAngle;
+            }
+        }
+
+        function getRandomPrize() {
+            const randomNum = Math.random();
+
+            let cumulativeProbability = 0;
+            for (const prize of prizes) {
+                cumulativeProbability += prize.probability;
+                if (randomNum <= cumulativeProbability) {
+                    return prize;
+                }
+            }
+
+            return null;
+        }
+
+        function rotateWheel() {
+            const degrees = 360; // 旋转一圈
+            const randomPrize = getRandomPrize();
+            const prizeIndex = prizes.indexOf(randomPrize);
+            const sliceAngle = 360 / prizes.length;
+            const rotateAngle = degrees + (sliceAngle * prizeIndex);
+
+            wheel.style.transform = `rotate(${-rotateAngle}deg)`;
+
+            setTimeout(() => {
+                if (randomPrize) {
+                    alert(`恭喜您获得了${randomPrize.name}！`);
+                }
+            }, 5000);
+        }
+
+        spinBtn.addEventListener('click', rotateWheel);
+
+        function createPrizeList() {
+            prizeList.innerHTML = '';
+            for (const prize of prizes) {
+                const li = document.createElement('li');
+                li.textContent = `${prize.name} (${(prize.probability * 100).toFixed(2)}%)`;
+                prizeList.appendChild(li);
+            }
+        }
+
+        addPrizeBtn.addEventListener('click', () => {
+            const prizeName = prizeNameInput.value;
+            const probability = parseFloat(probabilityInput.value);
+
+            // 验证输入的值是否合法
+            if (!prizeName || isNaN(probability) || probability < 0 || probability > 1) {
+                alert('请输入有效的奖品名称和中奖概率！');
+                return;
+            }
+
+            const newPrize = { name: prizeName, probability: probability };
+            prizes.push(newPrize);
+
+            prizeNameInput.value = '';
+            probabilityInput.value = '';
+
+            createWheel();
+            createPrizeList();
+        });
+    </script>
+</body>
+</html>
