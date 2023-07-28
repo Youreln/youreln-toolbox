@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+        <title>代码编辑器</title>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.2/codemirror.min.css">
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.2/codemirror.min.js"></script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.2/mode/javascript/javascript.min.js"></script>
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.2/mode/python/python.min.js"></script>
+                            <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+                                <style>
+                                        body {
+                                                        font-family: Arial, sans-serif;
+                                                                    background-color: #f2f2f2;
+                                                                                padding: 20px;
+                                                                                            text-align: center;
+                                        }
+
+                                                .editor {
+                                                                height: 400px;
+                                                                            margin-bottom: 20px;
+                                                }
+
+                                                        .controls button {
+                                                                        font-size: 16px;
+                                                                                    padding: 10px 20px;
+                                                                                                border: none;
+                                                                                                            cursor: pointer;
+                                                                                                                        background-color: #00bfa5;
+                                                                                                                                    color: #fff;
+                                                                                                                                                margin-right: 10px;
+                                                                                                                                                            transition: background-color 0.3s;
+                                                        }
+
+                                                                .controls button:hover {
+                                                                                background-color: #009c8b;
+                                                                }
+
+                                                                        .image-container {
+                                                                                        margin-top: 20px;
+                                                                        }
+                                                                            </style>
+                                                                            </head>
+                                                                            <body>
+                                                                                <h1>代码编辑器</h1>
+
+                                                                                    <div class="editor" id="codeEditor"></div>
+
+                                                                                        <div class="controls">
+                                                                
+                                                                                                        <label for="highlightCheckbox">
+                                                                                                                    <input type="checkbox" id="highlightCheckbox">生成图片语法高亮
+                                                                                                                            </label>
+                                                                                                                                    <button id="generateImageButton">生成图片</button>
+                                                                                                                                        </div>
+
+                                                                                                                                            <div class="image-container" id="imageContainer"></div>
+
+                                                                                                                                                <script>
+                                                                                                                                                        var editor = CodeMirror(document.getElementById("codeEditor"), {
+                                                                                                                                                                        lineNumbers: true,
+                                                                                                                                                                                    mode: "javascript", // 默认选择 JavaScript 语言
+                                                                                                                                                                                                theme: "default"
+                                                                                                                                                        });
+
+                                                                                                                                                                // 下载代码按钮点击事件处理函数
+                                                                                                                                                                        document.getElementById("downloadButton").addEventListener("click", function() {
+                                                                                                                                                                                        var code = editor.getValue();
+                                                                                                                                                                                                    downloadCode(code);
+                                                                                                                                                                        });
+
+                                                                                                                                                                                // 生成图片按钮点击事件处理函数
+                                                                                                                                                                                        document.getElementById("generateImageButton").addEventListener("click", function() {
+                                                                                                                                                                                                        var code = editor.getValue();
+                                                                                                                                                                                                                    var shouldHighlight = document.getElementById("highlightCheckbox").checked;
+                                                                                                                                                                                                                                generateImage(code, shouldHighlight);
+                                                                                                                                                                                        });
+
+                                                                                                                                                                                                // 下载代码函数
+                                                                                                                                                                                                        function downloadCode(code) {
+                                                                                                                                                                                                                        var blob = new Blob([code], { type: "text/plain;charset=utf-8" });
+                                                                                                                                                                                                                                    saveAs(blob, "code.txt");
+                                                                                                                                                                                                        }
+
+                                                                                                                                                                                                                // 生成图片函数
+                                                                                                                                                                                                                        function generateImage(code, shouldHighlight) {
+                                                                                                                                                                                                                                        var canvas = document.createElement("canvas");
+                                                                                                                                                                                                                                                    canvas.width = 800;
+                                                                                                                                                                                                                                                                canvas.height = 600;
+
+                                                                                                                                                                                                                                                                            var context = canvas.getContext("2d");
+                                                                                                                                                                                                                                                                                        context.fillStyle = "#f2f2f2";
+                                                                                                                                                                                                                                                                                                    context.fillRect(0, 0, canvas.width, canvas.height);
+
+                                                                                                                                                                                                                                                                                                                context.font = "20px Arial";
+                                                                                                                                                                                                                                                                                                                            context.fillStyle = "#000";
+                                                                                                                                                                                                                                                                                                                                        var lines = code.split("\n");
+                                                                                                                                                                                                                                                                                                                                                    for (var i = 0; i < lines.length; i++) {
+                                                                                                                                                                                                                                                                                                                                                                        var y = 30 + i * 30;
+                                                                                                                                                                                                                                                                                                                                                                                        if (shouldHighlight) {
+                                                                                                                                                                                                                                                                                                                                                                                                                context.fillStyle = getSyntaxHighlightColor(lines[i]); // 获取语法高亮颜色
+                                                                                                                                                                                                                                                                                                                                                                                        } else {
+                                                                                                                                                                                                                                                                                                                                                                                                                context.fillStyle = "#000"; // 默认颜色
+                                                                                                                                                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                                                                                                        context.fillText(lines[i], 20, y);
+                                                                                                                                                                                                                                                                                                                                                    }
+
+                                                                                                                                                                                                                                                                                                                                                                var image = canvas.toDataURL("image/png");
+                                                                                                                                                                                                                                                                                                                                                                            var imageElement = document.createElement("img");
+                                                                                                                                                                                                                                                                                                                                                                                        imageElement.src = image;
+
+                                                                                                                                                                                                                                                                                                                                                                                                    document.getElementById("imageContainer").innerHTML = ""; // 清空容器
+                                                                                                                                                                                                                                                                                                                                                                                                                document.getElementById("imageContainer").appendChild(imageElement);
+                                                                                                                                                                                                                        }
+
+                                                                                                                                                                                                                                // 获取语法高亮颜色函数（此处仅提供示例，实际应根据语言和主题进行适配）
+                                                                                                                                                                                                                                        function getSyntaxHighlightColor(line) {
+                                                                                                                                                                                                                                                        if (line.includes("function")) {
+                                                                                                                                                                                                                                                                            return "#00bfa5"; // 函数关键字高亮为绿色
+                                                                                                                                                                                                                                                        } else if (line.includes("if") || line.includes("else")) {
+                                                                                                                                                                                                                                                                            return "#ff4081"; // 条件语句关键字高亮为粉色
+                                                                                                                                                                                                                                                        } else {
+                                                                                                                                                                                                                                                                            return "#000"; // 默认颜色
+                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                            </script>
+                                                                                                                                                                                                                                            </body>
+                                                                                                                                                                                                                                            </html>
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                        }
+                                                                                                                                                                                                        }
+                                                                                                                                                                                        })
+                                                                                                                                                                        })
+                                                                                                                                                        })
+                                                                        }
+                                                                }
+                                                        }
+                                                }
+                                        }
