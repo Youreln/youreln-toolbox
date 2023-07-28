@@ -206,65 +206,17 @@
             passRate = passRate.toFixed(2); // 保留两位小数
 
             // 以下是将成绩分析结果展示在表格中的代码
-            var tableHtml = "";
-            tableHtml += "<tr>";
-            for (var i = 0; i < colCount; i++) {
-                tableHtml += "<th>" + header[i] + "</th>";
-            }
-            tableHtml += "</tr>";
-            for (var i = 0; i < rowCount; i++) {
-                var row = result[i];
-                var score = parseInt(row[1]);
-                var fullScore = parseInt(row[2]);
-                var percentage = score / fullScore * 100;
-                percentage = percentage.toFixed(2); // 保留两位小数
-                tableHtml += "<tr>";
-                tableHtml += "<td>" + row[0] + "</td>";
-                tableHtml += "<td>" + row[1] + "</td>";
-                tableHtml += "<td>" + percentage + "%</td>";
-                tableHtml += "</tr>";
-            }
-            tableHtml += "<tr>";
-            tableHtml += "<td>平均分：</td>";
-            tableHtml += "<td>" + averageScore.toFixed(2) + "</td>";
-            tableHtml += "<td></td>";
-            tableHtml += "</tr>";
-            tableHtml += "<tr>";
-            tableHtml += "<td>最高分：</td>";
-            tableHtml += "<td>" + maxScore + "</td>";
-            tableHtml += "<td></td>";
-            tableHtml += "</tr>";
-            tableHtml += "<tr>";
-            tableHtml += "<td>最低分：</td>";
-            tableHtml += "<td>" + minScore + "</td>";
-            tableHtml += "<td></td>";
-            tableHtml += "</tr>";
-            tableHtml += "<tr>";
-            tableHtml += "<td>及格率：</td>";
-            tableHtml += "<td>" + passRate + "%</td>";
-            tableHtml += "<td></td>";
-            tableHtml += "</tr>";
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var exportButton = document.getElementById("exportButton");
 
-            resultTable.innerHTML = tableHtml;
-            resultTable.style.display = "table";
-        }
+        exportButton.addEventListener("click", function() {
+            // 弹出提示框，提示用户前往电脑网页导出表格文件
+            window.alert("要导出表格文件，请前往电脑网页：https://youreln.gitee.io/youreln-toolbox/成绩分析");
+        });
+    });
+</script>
 
-        function exportTable() {
-            var data = [["姓名", "成绩", "得分率"]];
-            for (var i = 0; i < rows.length; i++) {
-                var row = rows[i];
-                var name = row[0];
-                var score = row[1];
-                var fullScore = row[2];
-                var percentage = score / fullScore * 100;
-                percentage = percentage.toFixed(2); // 保留两位小数
-                data.push([name, score, percentage + "%"]);
-            }
-            var ws = XLSX.utils.aoa_to_sheet(data, { header: 1 });
-            var wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-            XLSX.writeFile(wb, "成绩表.xlsx");
-        }
     </script>
 </body>
 </html>
