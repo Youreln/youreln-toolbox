@@ -1,17 +1,52 @@
+<!DOCTYPE html>
 <html>
 <head>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <meta charset="UTF-8">
+    <title>函数图像绘制工具</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #container {
+            width: 800px;
+            height: 600px;
+            margin-bottom: 20px;
+        }
+        #controls {
+            margin-bottom: 20px;
+        }
+        select, input[type="text"], input[type="color"] {
+            font-size: 16px;
+            padding: 5px;
+            margin-right: 10px;
+        }
+        button {
+            font-size: 16px;
+            padding: 5px 10px;
+            margin-right: 10px;
+        }
+        .alert {
+            font-size: 14px;
+            padding: 5px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 3px;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-  <div id="container" style="width: 800px; height: 600px;">
+<div id="container">
     <canvas id="myChart"></canvas>
-  </div>
-  <div id="controls">
+</div>
+<div id="controls">
     <p>请选择函数类型：</p>
     <select id="functionType" onchange="drawFunction()">
-      <option value="linear">线性函数</option>
-      <option value="quadratic">二次函数</option>
-      <option value="sinusoidal">正弦函数</option>
+        <option value="linear">线性函数</option>
+        <option value="quadratic">二次函数</option>
+        <option value="sinusoidal">正弦函数</option>
     </select>
     <p>请输入函数表达式（使用x作为变量）：</p>
     <input type="text" id="functionExpression" value="y = x + 1" onchange="drawFunction()">
@@ -19,108 +54,109 @@
     <input type="color" id="functionColor" value="#ff0000" onchange="drawFunction()">
     <button id="clearButton" onclick="clearFunction()">清空</button>
     <button id="saveButton" onclick="saveFunction()">生成图片</button>
-  </div>
-  <script>
+</div>
+<script>
     // 获取画布元素
     var canvas = document.getElementById("myChart");
     // 获取画布上下文
     var ctx = canvas.getContext("2d");
     // 创建一个新的Chart对象
     var myChart = new Chart(ctx, {
-      type: "scatter", // 设置图表类型为散点图
-      data: {
-        datasets: [] // 设置数据集为空数组
-      },
-      options: {
-        scales: {
-          xAxes: [{ // 设置x轴的属性
-            type: "linear", // 设置x轴为线性刻度
-            position: "bottom", // 设置x轴在底部
-            scaleLabel: { // 设置x轴的标签
-              display: true, // 显示标签
-              labelString: "x" // 标签内容为"x"
-            }
-          }],
-          yAxes: [{ // 设置y轴的属性
-            type: "linear", // 设置y轴为线性刻度
-            position: "left", // 设置y轴在左侧
-            scaleLabel: { // 设置y轴的标签
-              display: true, // 显示标签
-              labelString: "y" // 标签内容为"y"
-            }
-          }]
+        type: "scatter", // 设置图表类型为散点图
+        data: {
+            datasets: [] // 设置数据集为空数组
         },
-        legend: { // 设置图例的属性
-          display: true, // 显示图例
-          position: "top", // 设置图例在顶部
-          labels: { // 设置图例标签的属性
-            fontSize: 16, // 设置字体大小为16像素
-            fontColor: "#000000" // 设置字体颜色为黑色
-          }
-        },
-        title: { // 设置标题的属性
-          display: true, // 显示标题
-          text: "短煊函数图像绘制工具", // 设置标题内容
-          fontSize: 24, // 设置字体大小为24像素
-          fontColor: "#000000" // 设置字体颜色为黑色
+        options: {
+            scales: {
+                xAxes: [{ // 设置x轴的属性
+                    type: "linear", // 设置x轴为线性刻度
+                    position: "bottom", // 设置x轴在底部
+                    scaleLabel: { // 设置x轴的标签
+                        display: true, // 显示标签
+                        labelString: "x" // 标签内容为"x"
+                    }
+                }],
+                yAxes: [{ // 设置y轴的属性
+                    type: "linear", // 设置y轴为线性刻度
+                    position: "left", // 设置y轴在左侧
+                    scaleLabel: { // 设置y轴的标签
+                        display: true, // 显示标签
+                        labelString: "y" // 标签内容为"y"
+                    }
+                }]
+            },
+            legend: { // 设置图例的属性
+                display: true, // 显示图例
+                position: "top", // 设置图例在顶部
+                labels: { // 设置图例标签的属性
+                    fontSize: 16, // 设置字体大小为16像素
+                    fontColor: "#000000" // 设置字体颜色为黑色
+                }
+            },
+            title: { // 设置标题的属性
+                display: true, // 显示标题
+                text: "函数图像绘制工具", // 设置标题内容
+                fontSize: 24, // 设置字体大小为24像素
+                fontColor: "#000000" // 设置字体颜色为黑色
+            }
         }
-      }
     });
 
     // 定义一个函数，用于根据函数类型和表达式生成数据点
     function generateDataPoints(functionType, functionExpression) {
-      var dataPoints = []; // 创建一个空数组，用于存储数据点
-      var xMin = -10; // 设置x轴的最小值为-10
-      var xMax = 10; // 设置x轴的最大值为10
-      var xStep = 0.1; // 设置x轴的步长为0.1
-      for (var x = xMin; x <= xMax; x += xStep) { // 遍历x轴的每个值
-        var y = 0; // 初始化y轴的值为0
-        if (functionType == "linear") { // 如果函数类型为线性函数
-          y = eval(functionExpression.replace("x", x)); // 用eval函数计算表达式的值，替换x为当前的x值
-        } else if (functionType == "quadratic") { // 如果函数类型为二次函数
-          y = eval(functionExpression.replace("x", x * x)); // 用eval函数计算表达式的值，替换x为当前的x的平方
-        } else if (functionType == "sinusoidal") { // 如果函数类型为正弦函数
-          y = eval(functionExpression.replace("x", Math.sin(x))); // 用eval函数计算表达式的值，替换x为当前的x的正弦值
+        var dataPoints = []; // 创建一个空数组，用于存储数据点
+        var xMin = -10; // 设置x轴的最小值为-10
+        var xMax = 10; // 设置x轴的最大值为10
+        var xStep = 0.1; // 设置x轴的步长为0.1
+        for (var x = xMin; x <= xMax; x += xStep) { // 遍历x轴的每个值
+            var y = 0; // 初始化y轴的值为0
+            if (functionType == "linear") { // 如果函数类型为线性函数
+                y = eval(functionExpression.replace("x", x)); // 用eval函数计算表达式的值，替换x为当前的x值
+            } else if (functionType == "quadratic") { // 如果函数类型为二次函数
+                y = eval(functionExpression.replace("x", x * x)); // 用eval函数计算表达式的值，替换x为当前的x的平方
+            } else if (functionType == "sinusoidal") { // 如果函数类型为正弦函数
+                y = eval(functionExpression.replace("x", Math.sin(x))); // 用eval函数计算表达式的值，替换x为当前的x的正弦值
+            }
+            dataPoints.push({x: x, y: y}); // 将当前的数据点添加到数组中
         }
-        dataPoints.push({x: x, y: y}); // 将当前的数据点添加到数组中
-      }
-      return dataPoints; // 返回数据点数组
+        return dataPoints; // 返回数据点数组
     }
 
     // 定义一个函数，用于绘制函数图像
     function drawFunction() {
-      var functionType = document.getElementById("functionType").value; // 获取用户选择的函数类型
-      var functionExpression = document.getElementById("functionExpression").value; // 获取用户输入的函数表达式
-      var functionColor = document.getElementById("functionColor").value; // 获取用户选择的颜色
-      var dataPoints = generateDataPoints(functionType, functionExpression); // 调用generateDataPoints函数，生成数据点数组
-      myChart.data.datasets.push({ // 向图表中添加一个新的数据集
-        label: functionExpression, // 设置数据集的标签为函数表达式
-        data: dataPoints, // 设置数据集的数据为数据点数组
-        borderColor: functionColor, // 设置数据集的边框颜色为用户选择的颜色
-        backgroundColor: "rgba(0,0,0,0)", // 设置数据集的背景颜色为透明色
-        showLine: true, // 设置显示线条
-        fill: false, // 设置不填充区域
-        pointRadius: 0, // 设置数据点的半径为0，即不显示数据点
-      });
-      myChart.update(); // 更新图表显示效果
+        var functionType = document.getElementById("functionType").value; // 获取用户选择的函数类型
+        var functionExpression = document.getElementById("functionExpression").value; // 获取用户输入的函数表达式
+        var functionColor = document.getElementById("functionColor").value; // 获取用户选择的颜色
+        var dataPoints = generateDataPoints(functionType, functionExpression); // 调用generateDataPoints函数，生成数据点数组
+        myChart.data.datasets = []; // 清空已有的数据集
+        myChart.data.datasets.push({ // 向图表中添加一个新的数据集
+            label: functionExpression, // 设置数据集的标签为函数表达式
+            data: dataPoints, // 设置数据集的数据为数据点数组
+            borderColor: functionColor, // 设置数据集的边框颜色为用户选择的颜色
+            backgroundColor: "rgba(0,0,0,0)", // 设置数据集的背景颜色为透明色
+            showLine: true, // 设置显示线条
+            fill: false, // 设置不填充区域
+            pointRadius: 0, // 设置数据点的半径为0，即不显示数据点
+        });
+        myChart.update(); // 更新图表显示效果
     }
 
     // 定义一个函数，用于清空函数图像
     function clearFunction() {
-      myChart.data.datasets = []; // 将图表中的数据集设置为空数组，即清空所有数据集
-      myChart.update(); // 更新图表显示效果
+        myChart.data.datasets = []; // 将图表中的数据集设置为空数组，即清空所有数据集
+        myChart.update(); // 更新图表显示效果
     }
 
     // 定义一个函数，用于生成图片并在下方显示
     function saveFunction() {
-      var image = canvas.toDataURL("image/png"); // 调用canvas元素的toDataURL方法，将画布内容转换为图片格式，并返回图片的URL地址
-      var imageElement = document.createElement("img"); // 创建一个新的img元素，用于显示图片内容
-      imageElement.src = image; // 将img元素的src属性设置为图片的URL地址，即显示图片内容
-      document.body.appendChild(imageElement); // 将img元素添加到文档中，即在下方显示图片内容 
+        var image = canvas.toDataURL("image/png"); // 调用canvas元素的toDataURL方法，将画布内容转换为图片格式，并返回图片的URL地址
+        var imageElement = document.createElement("img"); // 创建一个新的img元素，用于显示图片内容
+        imageElement.src = image; // 将img元素的src属性设置为图片的URL地址，即显示图片内容
+        document.body.appendChild(imageElement); // 将img元素添加到文档中，即在下方显示图片内容
     }
-  </script>
-</body>
+</script>
 <div class="alert" role="alert">
-            注意：点击函数选项可以隐藏此函数图像！
-        </div>
+    注意：点击函数选项可以隐藏此函数图像！
+</div>
+</body>
 </html>
