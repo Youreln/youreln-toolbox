@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youreln云CDN</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #007bff;
+        }
+
+        p {
+            margin-top: 10px;
+            color: #999;
+        }
+
+        pre {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 14px;
+            line-height: 1.5;
+            background-color: #f7f7f7;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>CDN</h2>
+        <p>在国内尚没有稳定的 Font Awesome图标库源，大家可以使用我的这个CDN，其他路径都是有效的，这里只展示核心调用代码，其他可以按需修改。注意：版本是图标6.4.0版本，不要搞混！</p>
+        <pre><code>&lt;link rel="stylesheet" href="https://youreln.gitee.io/youreln-toolbox/css/all.min.css"&gt;</code></pre>
+        <button onclick="copyToClipboard()">复制</button>
+    </div>
+
+    <script>
+        function copyToClipboard() {
+            var copyText = document.querySelector("pre code");
+            var range = document.createRange();
+            range.selectNode(copyText);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand("copy");
+            window.getSelection().removeAllRanges();
+            alert("已复制到剪贴板！");
+        }
+    </script>
+
+
+    <div class="container">
+        <h2>基础使用方法</h2>
+<pre><code><span class="line" line="1"><span class="ct-02be6d">&lt;</span><span class="ct-c6edf6">i</span><span class="ct-02be6d"> </span><span class="ct-5f063c">class</span><span class="ct-02be6d">=</span><span class="ct-beac64">"fas fa-camera"</span><span class="ct-02be6d">&gt;&lt;/</span><span class="ct-c6edf6">i</span><span class="ct-02be6d">&gt;
+</span></span><span class="line" line="2"><span class="ct-02be6d">&lt;</span><span class="ct-c6edf6">span</span><span class="ct-02be6d"> </span><span class="ct-5f063c">class</span><span class="ct-02be6d">=</span><span class="ct-beac64">"fas fa-camera"</span><span class="ct-02be6d">&gt;&lt;/</span><span class="ct-c6edf6">span</span><span class="ct-02be6d">&gt;
+</span></span><span class="line" line="3"><span class="ct-02be6d">&lt;</span><span class="ct-c6edf6">a</span><span class="ct-02be6d"> </span><span class="ct-5f063c">href</span><span class="ct-02be6d">=</span><span class="ct-beac64">""</span><span class="ct-02be6d"> </span><span class="ct-5f063c">class</span><span class="ct-02be6d">=</span><span class="ct-beac64">"fas fa-camera"</span><span class="ct-02be6d">&gt;&lt;/</span><span class="ct-c6edf6">a</span><span class="ct-02be6d">&gt;</span></span></code></pre>
+<body>
+	<div data-v-2f3dd4f8="" class="bg-white border rounded-lg flex border-gray-100 py-3 px-8 items-center"><i data-v-2f3dd4f8="" class="mr-4 text-6 i-fas-gear"></i><h6 data-v-2f3dd4f8="">具体参见FontAwesome官网</h6></div>
+</html>
