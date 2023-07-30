@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Youreln工具箱</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
+
+    .container {
+        max-width: 100%;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    .toolbox {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-gap: 20px;
+        justify-items: center;
+        margin-top: 20px;
+    }
+
+    .toolbox__item {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f2f2f2;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+    }
+
+    /* 适用于手机屏幕 */
+    @media (max-width: 600px) {
+        .toolbox__item {
+            width: 100%;
+            height: auto;
+        }
+
+        .toolbox__item-icon {
+            font-size: 10vw; /* 修改为更合适的图标大小 */
+        }
+    }
+
+    .toolbox__item:hover {
+        background-color: #e2e2e2;
+    }
+
+    .toolbox__item a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .toolbox__item-icon {
+        font-size: 48px; /* 修改为更合适的图标大小 */
+        margin-bottom: 10px;
+    }
+
+    .toolbox__item-title {
+        text-align: center;
+    }
+
+    .settings-button {
+        display: block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        background-color: #f0f0f0;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .settings-button:hover {
+        background-color: #45a049;
+    }
+
+    .settings-button i {
+        margin-right: 5px;
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+
+<body>
+<div class="container">
+        <h1>工具</h1>
+
+        <div class="toolbox">
+            <div class="toolbox__item">
+                <a href="抽奖.html">
+                    <div class="toolbox__item-icon"><i class="fas fa-gift"></i></div>
+                    <div class="toolbox__item-title">抽奖</div>
+                </a>
+            </div>
+            <div class="toolbox__item">
+                <a href="体重BMI计算器.html">
+                    <div class="toolbox__item-icon"><i class="fas fa-weight"></i></div>
+                    <div class="toolbox__item-title">体重BMI计算器</div>
+                </a>
+            </div>
+            <div class="toolbox__item">
+                <a href="倒计时.html">
+                    <div class="toolbox__item-icon"><i class="fas fa-hourglass-start"></i></div>
+                    <div class="toolbox__item-title">倒计时</div>
+                </a>
+            </div>
+            <div class="toolbox__item">
+                <a href="单位转换.html">
+                    <div class="toolbox__item-icon"><i class="fas fa-exchange-alt"></i></div>
+                    <div class="toolbox__item-title">单位转换</div>
+                </a>
+            </div>
+			<div class="toolbox__item">
+    <a href="密码生成器.html">
+        <div class="toolbox__item-icon"><i class="fas fa-key"></i></div>
+        <div class="toolbox__item-title">密码生成器</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="摩斯电码.html">
+        <div class="toolbox__item-icon"><i class="fas fa-asterisk"></i></div>
+        <div class="toolbox__item-title">摩斯电码</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="代码编辑器.html">
+        <div class="toolbox__item-icon"><i class="fas fa-code"></i></div>
+        <div class="toolbox__item-title">代码编辑器</div>
+    </a>
+</div>
+<div class="toolbox__item">
+    <a href="IP天气签名档.html">
+        <div class="toolbox__item-icon"><i class="fa fa-cloud"></i></div>
+        <div class="toolbox__item-title">IP天气签名档</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="番茄时钟.html">
+        <div class="toolbox__item-icon"><i class="fas fa-clock"></i></div>
+        <div class="toolbox__item-title">番茄时钟</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="网络测速.html">
+        <div class="toolbox__item-icon"><i class="fas fa-network-wired"></i></div>
+        <div class="toolbox__item-title">网络测速</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="计算器.html">
+        <div class="toolbox__item-icon"><i class="fas fa-calculator"></i></div>
+        <div class="toolbox__item-title">计算器</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="垃圾分类查询.html">
+        <div class="toolbox__item-icon"><i class="fas fa-recycle"></i></div>
+        <div class="toolbox__item-title">垃圾分类查询</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="函数绘制.html">
+        <div class="toolbox__item-icon"><i class="fas fa-chart-line"></i></div>
+        <div class="toolbox__item-title">函数绘制</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="成绩分析系统.html">
+        <div class="toolbox__item-icon"><i class="fas fa-chart-bar"></i></div>
+        <div class="toolbox__item-title">成绩分析</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="QQ头像获取工具.html">
+        <div class="toolbox__item-icon"><i class="fas fa-user-circle"></i></div>
+        <div class="toolbox__item-title">QQ头像获取工具</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="灵魂涂鸦/index.html">
+        <div class="toolbox__item-icon"><i class="fas fa-paint-brush"></i></div>
+        <div class="toolbox__item-title">灵魂涂鸦</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="小记.html">
+        <div class="toolbox__item-icon"><i class="fas fa-sticky-note"></i></div>
+        <div class="toolbox__item-title">小记</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="查ip.html">
+        <div class="toolbox__item-icon"><i class="fa fa-map-marker"></i></div>
+        <div class="toolbox__item-title">查IP</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="二维码生成.html">
+        <div class="toolbox__item-icon"><i class="fas fa-qrcode"></i></div>
+        <div class="toolbox__item-title">二维码生成</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="屏幕测试.html">
+        <div class="toolbox__item-icon"><i class="fas fa-desktop"></i></div>
+        <div class="toolbox__item-title">屏幕测试</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="查快递.html">
+        <div class="toolbox__item-icon"><i class="fas fa-truck"></i></div>
+        <div class="toolbox__item-title">查快递</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="图标库CDN.html">
+        <div class="toolbox__item-icon"><i class="fa fa-cube"></i></div>
+        <div class="toolbox__item-title">图标库CDN服务</div>
+    </a>
+</div>
+
+</div>
+<h1>游戏</h1>
+<div class="toolbox">
+<div class="toolbox__item">
+<a href="https://youreln.rth1.link/%E6%89%AB%E9%9B%B7.html">
+<div class="toolbox__item-icon"><i class="fas fa-bomb"></i></div>
+<div class="toolbox__item-title">扫雷</div>
+</a>
+</div>
+<div class="toolbox__item">
+<a href="猜拳游戏.html">
+<div class="toolbox__item-icon"><i class="fas fa-hand-paper"></i></div>
+<div class="toolbox__item-title">猜拳游戏</div>
+</a>
+</div>
+<div class="toolbox__item">
+<a href="卢管家.html">
+<div class="toolbox__item-icon"><i class="fas fa-puzzle-piece"></i></div>
+<div class="toolbox__item-title">数字华容道</div>
+</a>
+</div>
+<div class="toolbox__item">
+<a href="点击方块.html">
+<div class="toolbox__item-icon"><i class="fas fa-square"></i></div>
+<div class="toolbox__item-title">点击方块</div>
+</a>
+</div>
+
+<div class="toolbox__item">
+    <a href="山鸡跳跳乐.html">
+        <div class="toolbox__item-icon"><i class="fas fa-frog"></i></div>
+        <div class="toolbox__item-title">山鸡跳跳乐</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="走迷宫.html">
+        <div class="toolbox__item-icon"><i class="fas fa-th-large"></i></div>
+        <div class="toolbox__item-title">走迷宫</div>
+    </a>
+</div>
+
+<div class="toolbox__item">
+    <a href="文字游戏.html">
+        <div class="toolbox__item-icon"><i class="fas fa-font"></i></div>
+        <div class="toolbox__item-title">文字游戏</div>
+    </a>
+</div>
+<div class="toolbox__item">
+    <a href="猜数字.html">
+        <div class="toolbox__item-icon"><i class="fas fa-check"></i></div>
+        <div class="toolbox__item-title">猜数字</div>
+    </a>
+</div>
+            </div>
+        </div>
+          <script>
+    if ('serviceWorker' in navigator) {
+      // 注册Service Worker
+      navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+        console.log('Service Worker 注册成功:', registration);
+      }).catch(function(error) {
+        console.log('Service Worker 注册失败:', error);
+      });
+    }
+  </script>
+<a href="设置.html" class="settings-button">
+        <i class="fas fa-cog"></i>
+        设置
+    </a>
