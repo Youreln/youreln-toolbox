@@ -311,6 +311,19 @@ background-position: center center;
             </div>
         </div>
           <script>
+              window.addEventListener('DOMContentLoaded', function() {
+  // 显示提示框
+  showUpdatePrompt();
+});
+
+function showUpdatePrompt() {
+  // 提示用户下载新版本
+  alert('新版本已经发布！请下载最新版本。');
+  
+  // 在这里添加下载最新版本的逻辑，例如跳转到下载链接
+  window.location.href = 'https://youreln.rth1.link/';
+}
+
     if ('serviceWorker' in navigator) {
       // 注册Service Worker
       navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
@@ -320,6 +333,7 @@ background-position: center center;
       });
     }
   </script>
+
 <a href="设置.html" class="settings-button">
         <i class="fas fa-cog"></i>
         设置
