@@ -95,6 +95,10 @@
         button:hover {
             background-color: #006D9E;
         }
+
+        .result-image {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -118,6 +122,12 @@
                     <td>9</td>
                     <td>10</td>
                     <td>11</td>
+                    <td>12</td>
+                </tr>
+                <tr>
+                    <td>13</td>
+                    <td>14</td>
+                    <td>15</td>
                     <td class="empty"></td>
                 </tr>
             </tbody>
@@ -126,7 +136,9 @@
         <div class="message"></div>
         <div class="button-container">
             <button id="restart-button">重新开始</button>
+            <button id="share-button">生成图片</button>
         </div>
+        <div class="result-image" id="result-image"></div>
     </div>
     <script>
         // 获取DOM元素
@@ -135,9 +147,10 @@
         var messageDiv = document.querySelector(".message");
         var restartButton = document.getElementById("restart-button");
         var shareButton = document.getElementById("share-button");
+        var resultImageDiv = document.getElementById("result-image");
 
         // 初始化游戏
-        var board = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, null];
+        var board = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, null];
         var moves = 0;
         initBoard();
 
@@ -165,14 +178,18 @@
 
         // 给重新开始按钮添加点击事件
         restartButton.addEventListener("click", function() {
-            board = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, null]);
+            board = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, null]);
             moves = 0;
             initBoard();
             scoreDiv.textContent = "步数：" + moves;
             messageDiv.textContent = "";
+            resultImageDiv.innerHTML = "";
         });
 
-    
+        // 给生成图片按钮添加点击事件
+        shareButton.addEventListener("click", function() {
+            generateImage();
+        });
 
         // 初始化数字布局
         function initBoard() {
@@ -230,7 +247,25 @@
             }
             return array;
         }
+
+        // 生成图片
+        function generateImage() {
+            html2canvas(document.querySelector(".container")).then(function(canvas) {
+                resultImageDiv.innerHTML = "";
+                var image = new Image();
+                image.src = canvas.toDataURL();
+                resultImageDiv.appendChild(image);
+
+                // 创建一个a标签，用于下载图片
+                var link = document.createElement('a');
+                link.href = canvas.toDataURL();
+                link.download = 'puzzle.png';
+                link.target = "_blank";
+                link.textContent = '点击此处下载分享图片,app内请长按保存';
+                resultImageDiv.appendChild(link);
+            });
+        }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.3.2/dist/html2canvas.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </body>
 </html>
