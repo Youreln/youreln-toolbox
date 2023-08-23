@@ -1,0 +1,119 @@
+* {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+a,
+img {
+  border: 0;
+}
+
+p {
+  color: #24298f;
+  margin: 0 0 1em !important;
+  font-size: 13px;
+}
+body {
+  font-family: "Open Sans", Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.6em;
+  color: #656565;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  background: #fff;
+  transition: all 0.3s linear;
+  -webkit-transition: all 0.3s linear;
+  -moz-transition: all 0.3s linear;
+  -o-transition: all 0.3s linear;
+}
+
+.banner-container {
+  background-image: url("../images/bg.jpg");
+  background-repeat: repeat;
+  background-size: cover;
+  font-size: 14px;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: fixed;
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.heading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  text-align: center;
+  /* margin-top:250px; */
+  line-height: 60px;
+  color: #ffffff;
+}
+.heading h2 {
+  font-size: 60px;
+  font-weight: normal;
+  font-weight: 700;
+  height: 140px;
+  line-height: 80px;
+}
+.heading h3 {
+  font-size: 28px;
+  font-weight: 700;
+  text-shadow: -1px -1px 5px rgba(0, 0, 0, 0.33);
+}
+.heading h5 {
+  font-size: 14px;
+}
+
+.countdown {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  margin-top: 210px;
+  line-height: 48px;
+}
+
+.styled div span {
+  display: block;
+  font-size: 16px;
+  margin-top: 0;
+  font-weight: normal;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  margin: 0 9px 8px 9px;
+  height: 28px;
+  line-height: 28px;
+}
+
+.styled div {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 30px;
+  font-weight: normal;
+  text-align: center;
+  height: 100px;
+  text-shadow: none;
+  vertical-align: middle;
+  color: #f44336;
+  margin: 10px 4px;
+  height: auto;
+  width: 112px;
+  border: 1px dashed rgba(255, 255, 255, 0.46);
+}
+
+.copyrights {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-top: 310px;
+  font-size: 14px;
+  color: #f44336;
+  text-align: center;
+  opacity: 0.6;
+}
