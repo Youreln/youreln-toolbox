@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>饼图生成器</title>
+    <!-- 引入 ECharts 和 xlsx.js -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.4.0/echarts.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        #chart { width: 600px; height: 400px; margin: 20px auto; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        input[type="text"], input[type="number"] { width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 4px; }
+        button { display: block; width: 100%; padding: 10px; margin-top: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>饼图生成器</h1>
+        <form id="dataForm">
+            <label for="title">标题:</label><input type="text" id="title" placeholder="请输入标题">
+            <label for="subtitle">副标题:</label><input type="text" id="subtitle" placeholder="请输入副标题">
+            <table>
+                <thead>
+                    <tr>
+                        <th>标签</th>
+                        <th>值</th>
+                    </tr>
+                </thead>
+                <tbody id="dataRows">
+                    <tr>
+                        <td><input type="text" class="labelInput" placeholder="标签"></td>
+                        <td><input type="number" class="valueInput" placeholder="值"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" onclick="addRow()">添加行</button>
+            <button type="button" onclick="removeLastRow()">删除最后一行</button>
+            <button type="button" onclick="updateChart()">更新图表</button>
+            <input type="file" id="fileUpload" accept=".xls,.xlsx" onchange="loadFile(event)">
+            <button type="button" onclick="parseFile()">从文件生成图表</button>
+            <div id="fileErrors" class="error"></div>
+        </form>
+        <div id="chart"></div>
+    </div>
+
+    <script>
+        var chart = echarts.init(document.getElementById('chart'));
+
+        function updateChart() {
+            var title = document.getElementById('title').value;
+            var subtitle = document.getElementById('subtitle').value;
+            var data = [];
+            document.querySelectorAll('#dataRows .labelInput').forEach((el, i) => {
+                var label = el.value.trim();
+                var value = document.querySelectorAll('#dataRows .valueInput')[i].value.trim();
+                if (label && !isNaN(value) && value !== '') {
+                    data.push({ name: label, value: parseFloat(value) });
+                } else {
+                    alert("请确保每行都有有效的标签和数值！");
+                    return;
+                }
+            });
+
+            var option = {
+                tooltip: {},
+                title: {
+                    text: title,
+                    subtext: subtitle
+                },
+                series: [{
+                    type: 'pie',
+                    radius: '55%',
+                    center: ['50%', '60%'],
+                    data: data,
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }]
+            };
+
+            chart.setOption(option);
+        }
+
+        function addRow() {
+            var tableBody = document.getElementById('dataRows');
+            var newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" class="labelInput" placeholder="标签"></td>
+                <td><input type="number" class="valueInput" placeholder="值"></td>`;
+            tableBody.appendChild(newRow);
+        }
+
+        function removeLastRow() {
+            var tableBody = document.getElementById('dataRows');
+            if (tableBody.rows.length > 1) {
+                tableBody.deleteRow(-1);
+            }
+        }
+
+        function loadFile(event) {
+            var file = event.target.files[0];
+            if (!file) return;
+            if (/\.(xls|xlsx)$/.test(file.name)) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    /* read workbook */
+                    var bstr = e.target.result;
+                    var wb = XLSX.read(bstr, { type: 'binary' });
+
+                    /* grab first sheet */
+                    var wsname = wb.SheetNames[0];
+                    var ws = wb.Sheets[wsname];
+
+                    /* convert array of arrays */
+                    var data = XLSX.utils.sheet_to_json(ws);
+
+                    /* clear current table and fill with new data */
+                    var tableBody = document.getElementById('dataRows');
+                    while (tableBody.firstChild) {
+                        tableBody.removeChild(tableBody.firstChild);
+                    }
+                    data.forEach(item => {
+                        addRow();
+                        document.querySelectorAll('#dataRows .labelInput')[
+                            document.querySelectorAll('#dataRows .labelInput').length - 1
+                        ].value = item.label || '';
+                        document.querySelectorAll('#dataRows .valueInput')[
+                            document.querySelectorAll('#dataRows .valueInput').length - 1
+                        ].value = item.value || '';
+                    });
+                };
+                reader.readAsBinaryString(file);
+            } else {
+                document.getElementById('fileErrors').innerText = '请选择正确的文件格式（.xls 或 .xlsx）';
+            }
+        }
+
+        function parseFile() {
+            updateChart();
+            document.getElementById('fileErrors').innerText = '';
+        }
+
+        // 初始化图表
+        updateChart();
+    </script>
+</body>
+</html>
